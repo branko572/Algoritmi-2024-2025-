@@ -1,0 +1,435 @@
+1.
+
+За дадена низа од случајни броеви кои се внесуваат од стандарден влез, да се направи преместување на сите нули на почеток на низата. На стандарден излез да се испечати трансформираната низа.
+
+/
+
+For a given array of random numbers given from standard input, perform a shift of all zeros at the beginning of the sequence. Print the transformed array to standard output.
+
+For example:
+
+Input	
+12
+1 9 8 4 0 0 2 7 0 6 0 9
+
+Result
+Transformiranata niza e:
+0 0 0 0 1 9 8 4 2 7 6 9
+
+BUILD THIS CODE:
+
+import java.util.Scanner;
+
+public class PushZero
+{
+	static void pushZerosToBeginning(int arr[], int n)
+	{
+	
+	}
+
+	public static void main (String[] args)
+	{
+		
+	}
+}
+
+---------------------------------------------------------------------------------
+
+import java.util.Scanner;
+
+public class PushZero {
+    static void pushZerosToBeginning(int arr[], int n) {
+        // Step 1: Count the number of zeros
+        int countZero = 0;
+        for (int i = 0; i < n; i++) {
+            if (arr[i] == 0) {
+                countZero++;
+            }
+        }
+
+        // Step 2: Create a new array with the size of the original
+        int[] result = new int[n];
+
+        // Step 3: Fill the new array with zeros first
+        for (int i = 0; i < countZero; i++) {
+            result[i] = 0;
+        }
+
+        // Step 4: Fill the rest of the new array with non-zero elements
+        int index = countZero;
+        for (int i = 0; i < n; i++) {
+            if (arr[i] != 0) {
+                result[index] = arr[i];
+                index++;
+            }
+        }
+
+        // Print the transformed array
+        System.out.println("Transformiranata niza e:");
+        for (int i = 0; i < n; i++) {
+            System.out.print(result[i] + " ");
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt(); // Read the size of the array
+        int[] arr = new int[n]; // Initialize the array
+
+        // Read the elements of the array
+        for (int i = 0; i < n; i++) {
+            arr[i] = sc.nextInt();
+        }
+
+        // Call the function to push zeros to the beginning
+        pushZerosToBeginning(arr, n);
+    }
+}
+
+---------------------------------------------------------------------------------
+
+2.
+
+За даден збор кој се внесува од стандарден влез, да се испечати истиот превртен. На влез во првиот ред се дава број на зборови кои ќе се внесуваат. Во наредните линии се внесуваат самите зборови.
+
+/
+
+For a given word entered from standard input, print it reversed. On input in the first line, the number of words that will be entered is given. In the following lines, the words are entered.
+
+For example:
+
+Input	
+3
+one
+two
+three
+
+Result
+eno
+owt
+eerht
+
+BUILD THIS CODE:
+
+import java.util.Scanner;
+
+public class ReverseWord {
+
+    public static void printReversed(String word) {
+        
+    }
+
+    public static void main(String[] args) {
+    
+    }
+}
+
+---------------------------------------------------------------------------------
+
+import java.util.Scanner;
+
+public class ReverseWord {
+    public static void printReversed(String word) {
+        String reversed = "";
+        for (int i = word.length() - 1; i >= 0; i--) {
+            reversed += word.charAt(i); // Append each character from the end
+        }
+        System.out.println(reversed); // Print the reversed string
+    }
+
+    public static void main(String[] args) {
+        Scanner n = new Scanner(System.in); // Single Scanner for all inputs
+        int number = n.nextInt();
+        n.nextLine(); // Consume the newline after the int input
+
+        for (int i = 0; i < number; i++) {
+            String word = n.nextLine(); // Read the full string input
+            printReversed(word); // Call the method to reverse and print the string
+        }
+    }
+}
+
+---------------------------------------------------------------------------------
+
+3.
+
+За потребите на софтвер за евиденција на приходите остварени од вработените во одделот за продажба, да се дефинира класа QuarterlySales во која се чуваат бројот на продажби остварени во одреден квартал, приходот добиен од секоја продажба и бројот на кварталот.
+
+Потоа, да се дефинира друга класа SalesPerson за кој се чува име (string) и низа од квартали (точно 4). За класите да се имплементираат соодветните конструктори и методи за правилно извршување на програмата. Да се имплементираат следните барања:
+
+• Метод int sumSales(SalesPerson sp) кој ќе врати сума од сите приходи остварени од дадениот вработен во одделот за продажба во сите квартали.
+
+• Метод SalesPerson salesChampion(SalesPerson [] arr) кој за дадената низа од работници ќе го врати работникот со најголем остварен приход (од сите квартали).
+
+• Да се дополни main методот во кој ќе се иницијализира низа од вработени во одделот за продажба и квартали согласно влезните тест примери. Во првиот ред се чита број на вработени, а понатаму прво во еден ред се чита името, па за секој квартал во еден ред бројот на продажби, и во следниот ред приходот добиен од секоја од тие продажби.
+
+• На стандарден излез да се испечати низата од вработени во одделот за продажба со помош на методата void table(SalesPerson [] arr) која за низата од вработени ќе отпечати приказ во следниот формат (за простор при печатење се користат три празни места):
+
+/
+
+For the purpose of a software for keeping track of the revenue generated by employees in the sales department, define a QuarterlySales class that stores the number of sales, the revenue generated by each sale and the number of the quarter.
+
+Then define another SalesPerson class for which a name(string) and an array of quarterly sales (exactly 4) are stored. For the classes implement the appropriate constructors and methods for the correct execution of the program.
+
+Implement the following requirements:
+
+• Method `int sumSales(SalesPerson sp)' which will return sum of all the revenues in all quarters generated by the given worker.
+
+• Method `SalesPerson salesChampion(SalesPerson [] arr)' which for the given array of sales employees will return the worker with the most generated revenue (of all quarters)
+
+• Add the `main' method, which will initialize an array of sales persons and quarters according to the input test cases. The number of sales employees is read from input in the first line, and then for each employee the name is read in the first line, and then for each of the quarters for that employee in the first line we have the number of sales, and then in the next line the revenue generated by each of those sales.
+
+• On standard output, print the array of sales employees using the method `void table(SalesPerson [] arr)', which will print a display for the array of sales persons in the following format (three spaces are used for printing space):
+
+For example:
+
+Input	
+5
+Damian
+3
+2000 1500 1000
+5
+1000 1300 2500 800 1100
+2
+3000 2000
+1
+1700
+Samantha
+4
+1500 2000 1700 1200
+6
+900 1200 1800 1100 1500 1300
+3
+2500 3000 2000
+5
+800 1000 1300 1200 900
+Jackson
+5
+1300 1500 1600 1200 1400
+4
+1700 2100 2000 1900
+6
+900 1200 1500 1800 2000 2200
+7
+500 700 900 1100 1300 1500 1700
+Olivia
+2
+3500 3000
+3
+2000 2500 3000
+4
+1500 1800 2100 2400
+5
+1000 1300 1600 1900 2200
+Liam
+6
+1100 1400 1700 2000 2300 2600
+7
+500 700 900 1100 1300 1500 1700
+8
+800 1000 1200 1400 1600 1800 2000 2200
+3
+2700 3000 3300
+
+Result
+
+SP   1   2   3   4   Total
+Damian   4500   6700   5000   1700   17900
+Samantha   6400   7800   7500   5200   26900
+Jackson   7000   7700   9600   7700   32000
+Olivia   6500   7500   7800   8000   29800
+Liam   11100   7700   12000   9000   39800
+
+SALES CHAMPION: Liam
+
+BUILD THIS CODE:
+
+import java.util.Scanner;
+
+class QuarterlySales {
+
+    private int numOfSales;
+    private int [] revenues;
+    private int quarterNo;
+
+    public QuarterlySales(int numOfSales, int[] revenues, int quarterNo) {
+        this.numOfSales = numOfSales;
+        this.revenues = revenues;
+        this.quarterNo = quarterNo;
+    }
+    @Override
+    public String toString() {
+        
+    }
+
+}
+
+class SalesPerson {
+
+    private String name;
+    private QuarterlySales [] quarters;
+
+    public SalesPerson(String name, QuarterlySales[] quarters) {
+        this.name = name;
+        this.quarters = quarters;
+    }
+    @Override
+    public String toString() {
+
+    }
+
+}
+
+
+
+public class Main {
+
+    public static SalesPerson salesChampion(SalesPerson [] arr)
+    {
+
+    }
+    public static void table(SalesPerson [] arr)
+    {
+
+
+    }
+
+    public static void main(String[] args) {
+
+        int n;
+        Scanner input = new Scanner(System.in);
+        n = input.nextInt();
+        SalesPerson [] arr = new SalesPerson[n];
+        for(int i=0;i<n;i++)
+        {
+            //your code goes here
+        }
+
+        table(arr);
+        System.out.println("SALES CHAMPION: " + salesChampion(arr).getName());
+
+    }
+}
+
+---------------------------------------------------------------------------------
+
+import java.util.Scanner;
+
+class QuarterlySales {
+    private int numOfSales;
+    private int[] revenues;
+    private int quarterNo;
+
+    public QuarterlySales(int numOfSales, int[] revenues, int quarterNo) {
+        this.numOfSales = numOfSales;
+        this.revenues = revenues;
+        this.quarterNo = quarterNo;
+    }
+
+    public int getTotalRevenue() {
+        int total = 0;
+        for (int revenue : revenues) {
+            total += revenue;
+        }
+        return total;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(quarterNo).append(": ");
+        for (int revenue : revenues) {
+            sb.append(revenue).append(" ");
+        }
+        return sb.toString().trim();
+    }
+}
+
+class SalesPerson {
+    private String name;
+    private QuarterlySales[] quarters;
+
+    public SalesPerson(String name, QuarterlySales[] quarters) {
+        this.name = name;
+        this.quarters = quarters;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int sumSales() {
+        int total = 0;
+        for (QuarterlySales quarter : quarters) {
+            total += quarter.getTotalRevenue();
+        }
+        return total;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(name).append("   ");
+        for (QuarterlySales quarter : quarters) {
+            sb.append(quarter.getTotalRevenue()).append("   ");
+        }
+        sb.append(sumSales());
+        return sb.toString();
+    }
+}
+
+public class Main {
+    public static SalesPerson salesChampion(SalesPerson[] arr) {
+        SalesPerson champion = arr[0];
+        for (SalesPerson sp : arr) {
+            if (sp.sumSales() > champion.sumSales()) {
+                champion = sp;
+            }
+        }
+        return champion;
+    }
+
+    public static void table(SalesPerson[] arr) {
+        System.out.println("SP   1   2   3   4   Total");
+        for (SalesPerson sp : arr) {
+            System.out.println(sp);
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        int n = input.nextInt(); // Number of employees
+        SalesPerson[] arr = new SalesPerson[n];
+
+        for (int i = 0; i < n; i++) {
+            String name = input.next(); // Read employee name
+            QuarterlySales[] quarters = new QuarterlySales[4]; // Initialize quarters
+
+            for (int q = 0; q < 4; q++) { // For each quarter
+                int numOfSales = input.nextInt(); // Read number of sales
+                int[] revenues = new int[numOfSales]; // Array for revenues
+
+                for (int j = 0; j < numOfSales; j++) {
+                    revenues[j] = input.nextInt(); // Read each revenue
+                }
+
+                // Create QuarterlySales object for the quarter
+                quarters[q] = new QuarterlySales(numOfSales, revenues, q + 1);
+            }
+
+            // Create SalesPerson object and add to the array
+            arr[i] = new SalesPerson(name, quarters);
+        }
+
+        // Call methods to display results
+        table(arr);
+        System.out.println( "\nSALES CHAMPION: " + salesChampion(arr).getName());
+    }
+}
+
+
+
+
+
+
+
