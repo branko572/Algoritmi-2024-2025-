@@ -427,6 +427,171 @@ public class Main {
     }
 }
 
+---------------------------------------------------------------------------------
+
+Eve ja 3tata od tie za vezbanje mi ja pratija: import java.util.Scanner;
+
+class QuarterlySales {
+
+    private int numOfSales;
+    private int [] revenues;
+    private int quarterNo;
+
+    public QuarterlySales(int numOfSales, int[] revenues, int quarterNo) {
+        this.numOfSales = numOfSales;
+        this.revenues = revenues;
+        this.quarterNo = quarterNo;
+    }
+
+    public int getNumOfSales() {
+        return numOfSales;
+    }
+
+    public void setNumOfSales(int numOfSales) {
+        this.numOfSales = numOfSales;
+    }
+
+    public int[] getRevenues() {
+        return revenues;
+    }
+
+    public void setRevenues(int[] revenues) {
+        this.revenues = revenues;
+    }
+
+    public int getQuarterNo() {
+        return quarterNo;
+    }
+
+    public void setQuarterNo(int quarterNo) {
+        this.quarterNo = quarterNo;
+    }
+
+    public int totalSales()
+    {
+        int sum=0;
+        for(int i=0;i<numOfSales;i++)
+        {
+            sum+=revenues[i];
+        }
+        return sum;
+    }
+
+//    @Override
+//    public String toString() {
+//
+//    }
+
+}
+
+class SalesPerson {
+
+    private String name;
+    private QuarterlySales [] quarters;
+
+    public SalesPerson(String name, QuarterlySales[] quarters) {
+        this.name = name;
+        this.quarters = quarters;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public QuarterlySales[] getQuarters() {
+        return quarters;
+    }
+
+    public void setQuarters(QuarterlySales[] quarters) {
+        this.quarters = quarters;
+    }
+
+    //  @Override
+//    public String toString() {
+//
+//    }
+
+}
+
+
+
+public class Main {
+
+    public static int sumSales(SalesPerson sp)
+    {
+        int sum=0;
+        for(int i=0;i<sp.getQuarters().length;i++)
+        {
+            sum+=sp.getQuarters()[i].totalSales();
+        }
+        return sum;
+    }
+    public static SalesPerson salesChampion(SalesPerson [] arr)
+    {
+        int max = sumSales(arr[0]);
+        SalesPerson champ = arr[0];
+        for(int i=1;i<arr.length;i++)
+        {
+            if(sumSales(arr[i]) > max)
+            {
+                max = sumSales(arr[i]);
+                champ = arr[i];
+            }
+        }
+        return champ;
+    }
+    public static void table(SalesPerson[] arr) {
+        System.out.println("SP   1   2   3   4   Total");
+        for (SalesPerson sp : arr) {
+            System.out.print(sp.getName() + "   ");
+            int totalSales = 0;
+            for (QuarterlySales qs : sp.getQuarters()) {
+                int quarterlyTotal = qs.totalSales();
+                totalSales += quarterlyTotal;
+                System.out.print(quarterlyTotal + "   ");
+            }
+            System.out.println(totalSales);
+        }
+    }
+
+    public static void main(String[] args) {
+
+        int n;
+        Scanner input = new Scanner(System.in);
+        n = input.nextInt();
+        SalesPerson [] arr = new SalesPerson[n];
+        for(int i=0;i<n;i++)
+        {
+            String name = input.next();
+            QuarterlySales []quartals = new QuarterlySales[4];
+            for(int j=0;j<4;j++)
+            {
+                int numOfSales = input.nextInt();
+
+                int[] revenues = new int[numOfSales];
+                for(int k=0;k<numOfSales;k++)
+                {
+                    revenues[k] = input.nextInt();
+                }
+                int quarterNo=j+1;
+                quartals[j] = new QuarterlySales(numOfSales, revenues, quarterNo);
+            }
+            SalesPerson person = new SalesPerson(name,quartals);
+            arr[i] = person;
+        }
+
+        table(arr);
+                System.out.println();
+
+        System.out.println("SALES CHAMPION: " + salesChampion(arr).getName());
+
+    }
+}
+
 
 
 
