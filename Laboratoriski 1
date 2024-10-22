@@ -1,0 +1,79 @@
+1.
+
+За дадена низа од N цели броеви, да се избришат елементите со вредност помала од просекот на сите елементи во низата. На пример за низата 1, 2, 3, 4, 5 просекот е (1 + 2 + 3 + 4 + 5) / 5 = 15 / 5 = 3, што значи треба да се избришат елементите 1 и 2, што значи низата после оваа трансформација ќе биде 3, 4, 5.
+
+Влез: Првиот број од влезот е бројот на елементи во низата N, а потоа во следниот ред се дадени самите елементи одделени со празно место.
+
+Излез: Низата пред и после направената трансформација.
+
+/
+
+For a given array with N integers, all the elements that are lower than the average of the whole array need to be deleted. For example for the array 1, 2, 3, 4, 5 the average is (1 + 2 + 3 + 4 + 5) / 5 = 15 / 5 = 3 which means that the elements 1 and 2 should be deleted, so the array after the transformation will be 3, 4, 5.
+
+Input: The first number in the input is the number of integers in the array N, then in the next line the elements are given, separated by spaces.
+
+Output: The array before and after the transformation.
+
+For example:
+
+Input
+5
+1 2 3 4 5
+
+Result
+{1,2,3,4,5}
+{3,4,5}
+
+
+import java.util.Scanner;
+import java.util.List;
+import java.util.ArrayList;
+
+public class LabVezba1 {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        
+        // Read the number of elements
+        int N = sc.nextInt();
+        List<Integer> numbers = new ArrayList<>(N);
+        int sum = 0;
+        
+        // Read elements and calculate sum
+        for (int i = 0; i < N; i++) {
+            int number = sc.nextInt();
+            sum += number;
+            numbers.add(number);
+        }
+
+        // Print original list
+        System.out.print("{");
+        for (int i = 0; i < numbers.size(); i++) {
+            System.out.print(numbers.get(i));
+            if (i < numbers.size() - 1) {
+                System.out.print(",");
+            }
+        }
+        System.out.println("}");
+
+        // Calculate average
+        double average = (double) sum / N;
+
+        // Create a new list to store elements greater than or equal to the average
+        List<Integer> filteredNumbers = new ArrayList<>();
+        for (int number : numbers) {
+            if (number >= average) {
+                filteredNumbers.add(number);
+            }
+        }
+
+        // Print filtered list
+        System.out.print("{");
+        for (int i = 0; i < filteredNumbers.size(); i++) {
+            System.out.print(filteredNumbers.get(i));
+            if (i < filteredNumbers.size() - 1) {
+                System.out.print(",");
+            }
+        }
+        System.out.println("}");  // Closing the filtered list
+    }
+}
