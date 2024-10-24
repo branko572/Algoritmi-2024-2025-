@@ -1,0 +1,98 @@
+VARIJACIJA 1
+
+
+import java.util.Scanner;
+import java.util.List;
+import java.util.ArrayList;
+
+public class LabVezba2 {
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        int N = sc.nextInt();  // Number of elements in the list
+        List<String> list = new ArrayList<>(N);
+
+        // Add elements to the list
+        for (int i = 0; i < N; i++) {
+            list.add(sc.next());
+        }
+
+        // Read the integer L
+        int L = sc.nextInt();
+
+        // Create a new list to store the modified elements
+        List<String> modifiedList = new ArrayList<>();
+
+        // Check if each element's length is greater than L
+        for (String element : list) {
+            if (element.length() > L) {
+                modifiedList.add("Outlier");  // Add "Outlier" before the element
+            }
+
+            modifiedList.add(element);  // Add the element itself
+        }
+
+        for(int i=0; i<modifiedList.size(); i++){
+            System.out.print(modifiedList.get(i));
+            if(i<modifiedList.size()-1){
+                System.out.print("->");
+            }
+        }
+
+
+    }
+}
+
+---------------------------------------------------------------------------------------------------------
+
+VARIJACIJA 2
+
+import java.util.Scanner;
+import java.util.List;
+import java.util.ArrayList;
+
+public class LabVezba2 {
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        int N = sc.nextInt();  // Number of elements in the list
+        List<String> list = new ArrayList<>(N);
+
+        // Add elements to the list
+        for (int i = 0; i < N; i++) {
+            list.add(sc.next());
+        }
+
+        // Read the integer L
+        int L = sc.nextInt();
+
+        // Create a new list to store the modified elements
+        List<String> modifiedList = new ArrayList<>();
+
+        // Check each element's length against L
+        for (String element : list) {
+            if (element.length() < L) {
+                continue;  // Skip elements with length less than L
+            }
+            modifiedList.add(element);  // Add the element if it meets the length requirement
+        }
+
+        // Print the modified list with '->' between elements
+        for (int i = 0; i < modifiedList.size(); i++) {
+            System.out.print(modifiedList.get(i));  // Use print instead of println
+            if (i < modifiedList.size() - 1) {
+                System.out.print("->");  // Add '->' between elements
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
