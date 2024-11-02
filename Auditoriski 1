@@ -1,0 +1,450 @@
+Задача 1.
+
+• Нека се дадени две низи, кои треба да
+бидат со иста големина. Да се напише
+функција која ќе прави промени во двете
+низи така што доколку на дадена позиција
+тие имаат еднакви елементи, истите треба
+да се избришат и во двете низи.
+
+import java.util.Scanner;
+
+class SLLNode<E> {
+    protected E element;
+    protected SLLNode<E> succ;
+
+    public SLLNode(E elem, SLLNode<E> succ) {
+        this.element = elem;
+        this.succ = succ;
+    }
+}
+
+class SLL<E> {
+    private SLLNode<E> first;
+
+    public SLL() {
+        // Construct an empty SLL
+        this.first = null;
+    }
+
+    public void deleteList() {
+        first = null;
+    }
+
+    public int size() {
+        int listSize = 0;
+        SLLNode<E> tmp = first;
+        while(tmp != null) {
+            listSize++;
+            tmp = tmp.succ;
+        }
+        return listSize;
+    }
+
+    @Override
+    public String toString() {
+        String ret = new String();
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            ret += tmp.element;
+            while (tmp.succ != null) {
+                tmp = tmp.succ;
+                ret += "<->" + tmp.element;
+            }
+        } else
+            ret = "Prazna lista!!!";
+        return ret;
+    }
+
+    public void insertFirst(E o) {
+        SLLNode<E> ins = new SLLNode<E>(o, null);
+        ins.succ = first;
+        //SLLNode<E> ins = new SLLNode<E>(o, first);
+        first = ins;
+    }
+
+    public void insertAfter(E o, SLLNode<E> node) {
+        if (node != null) {
+            SLLNode<E> ins = new SLLNode<E>(o, node.succ);
+            node.succ = ins;
+        } else {
+            System.out.println("Dadenot jazol e null");
+        }
+    }
+    public void insertBefore(E o, SLLNode<E> before) {
+
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            if(first==before){
+                this.insertFirst(o);
+                return;
+            }
+            //ako first!=before
+            while (tmp.succ != before && tmp.succ!=null)
+                tmp = tmp.succ;
+            if (tmp.succ == before) {
+                tmp.succ = new SLLNode<E>(o, before);;
+            } else {
+                System.out.println("Elementot ne postoi vo listata");
+            }
+        } else {
+            System.out.println("Listata e prazna");
+        }
+    }
+
+    public void insertLast(E o) {
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            while (tmp.succ != null)
+                tmp = tmp.succ;
+            tmp.succ = new SLLNode<E>(o, null);
+        } else {
+            insertFirst(o);
+        }
+    }
+
+    public E deleteFirst() {
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            first = first.succ;
+            return tmp.element;
+        } else {
+            System.out.println("Listata e prazna");
+            return null;
+        }
+    }
+
+    public E delete(SLLNode<E> node) {
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            if(first == node) {
+                return this.deleteFirst();
+            }
+            while (tmp.succ != node && tmp.succ.succ != null)
+                tmp = tmp.succ;
+            if (tmp.succ == node) {
+                tmp.succ = tmp.succ.succ;
+                return node.element;
+            } else {
+                System.out.println("Elementot ne postoi vo listata");
+                return null;
+            }
+        } else {
+            System.out.println("Listata e prazna");
+            return null;
+        }
+
+    }
+
+    public SLLNode<E> getFirst() {
+        return first;
+    }
+
+    public SLLNode<E> find(E o) {
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            while (!tmp.element.equals(o) && tmp.succ != null)
+                tmp = tmp.succ;
+            if (tmp.element.equals(o)) {
+                return tmp;
+            } else {
+                System.out.println("Elementot ne postoi vo listata");
+            }
+        } else {
+            System.out.println("Listata e prazna");
+        }
+        return null;
+    }
+
+    public void merge (SLL<E> in){
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            while(tmp.succ != null)
+                tmp = tmp.succ;
+            tmp.succ = in.getFirst();
+        }
+        else{
+            first = in.getFirst();
+        }
+    }
+
+    public void mirror() {
+        if (first != null) {
+            //m=nextsucc, p=tmp,q=next
+            SLLNode<E> tmp = first;
+            SLLNode<E> newsucc = null;
+            SLLNode<E> next;
+
+            while(tmp != null){
+                next = tmp.succ;
+                tmp.succ = newsucc;
+                newsucc = tmp;
+                tmp = next;
+            }
+            first = newsucc;
+        }
+    }
+}
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        SLL<Integer> list1= new SLL<>();
+        SLL<Integer> list2= new SLL<>();
+
+        int N = sc.nextInt();
+
+        for (int i = 0; i < N; i++) {
+            list1.insertLast(sc.nextInt());
+        }
+        for (int i = 0; i < N; i++) {
+            list2.insertLast(sc.nextInt());
+        }
+
+        System.out.println(list1);
+        System.out.println(list2);
+
+        SLLNode<Integer> current= list1.getFirst();
+        SLLNode<Integer> current2= list2.getFirst();
+
+        while (current != null && current2 != null) {
+            SLLNode<Integer> next1 = current.succ;
+            SLLNode<Integer> next2 = current2.succ;
+
+            if(current.element.equals(current2.element)){
+                list1.delete(current);
+                list2.delete(current2);
+            }
+            current= next1;
+            current2 = next2;
+
+        }
+
+        System.out.println(list1);
+        System.out.println(list2);
+
+
+
+
+    }
+}
+
+
+------------------------------------------------------------------------
+
+Задача 2.
+
+• Да се напише функција којашто за дадена
+еднострано поврзана листа од цели броеви ќе
+го врати бројот на парни елементи во истата. 
+
+import java.util.Scanner;
+
+class SLLNode<E> {
+    protected E element;
+    protected SLLNode<E> succ;
+
+    public SLLNode(E elem, SLLNode<E> succ) {
+        this.element = elem;
+        this.succ = succ;
+    }
+}
+
+class SLL<E> {
+    private SLLNode<E> first;
+
+    public SLL() {
+        // Construct an empty SLL
+        this.first = null;
+    }
+
+    public void deleteList() {
+        first = null;
+    }
+
+    public int size() {
+        int listSize = 0;
+        SLLNode<E> tmp = first;
+        while(tmp != null) {
+            listSize++;
+            tmp = tmp.succ;
+        }
+        return listSize;
+    }
+
+    @Override
+    public String toString() {
+        String ret = new String();
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            ret += tmp.element;
+            while (tmp.succ != null) {
+                tmp = tmp.succ;
+                ret += "<->" + tmp.element;
+            }
+        } else
+            ret = "Prazna lista!!!";
+        return ret;
+    }
+
+    public void insertFirst(E o) {
+        SLLNode<E> ins = new SLLNode<E>(o, null);
+        ins.succ = first;
+        //SLLNode<E> ins = new SLLNode<E>(o, first);
+        first = ins;
+    }
+
+    public void insertAfter(E o, SLLNode<E> node) {
+        if (node != null) {
+            SLLNode<E> ins = new SLLNode<E>(o, node.succ);
+            node.succ = ins;
+        } else {
+            System.out.println("Dadenot jazol e null");
+        }
+    }
+    public void insertBefore(E o, SLLNode<E> before) {
+
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            if(first==before){
+                this.insertFirst(o);
+                return;
+            }
+            //ako first!=before
+            while (tmp.succ != before && tmp.succ!=null)
+                tmp = tmp.succ;
+            if (tmp.succ == before) {
+                tmp.succ = new SLLNode<E>(o, before);;
+            } else {
+                System.out.println("Elementot ne postoi vo listata");
+            }
+        } else {
+            System.out.println("Listata e prazna");
+        }
+    }
+
+    public void insertLast(E o) {
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            while (tmp.succ != null)
+                tmp = tmp.succ;
+            tmp.succ = new SLLNode<E>(o, null);
+        } else {
+            insertFirst(o);
+        }
+    }
+
+    public E deleteFirst() {
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            first = first.succ;
+            return tmp.element;
+        } else {
+            System.out.println("Listata e prazna");
+            return null;
+        }
+    }
+
+    public E delete(SLLNode<E> node) {
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            if(first == node) {
+                return this.deleteFirst();
+            }
+            while (tmp.succ != node && tmp.succ.succ != null)
+                tmp = tmp.succ;
+            if (tmp.succ == node) {
+                tmp.succ = tmp.succ.succ;
+                return node.element;
+            } else {
+                System.out.println("Elementot ne postoi vo listata");
+                return null;
+            }
+        } else {
+            System.out.println("Listata e prazna");
+            return null;
+        }
+
+    }
+
+    public SLLNode<E> getFirst() {
+        return first;
+    }
+
+    public SLLNode<E> find(E o) {
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            while (!tmp.element.equals(o) && tmp.succ != null)
+                tmp = tmp.succ;
+            if (tmp.element.equals(o)) {
+                return tmp;
+            } else {
+                System.out.println("Elementot ne postoi vo listata");
+            }
+        } else {
+            System.out.println("Listata e prazna");
+        }
+        return null;
+    }
+
+    public void merge (SLL<E> in){
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            while(tmp.succ != null)
+                tmp = tmp.succ;
+            tmp.succ = in.getFirst();
+        }
+        else{
+            first = in.getFirst();
+        }
+    }
+
+    public void mirror() {
+        if (first != null) {
+            //m=nextsucc, p=tmp,q=next
+            SLLNode<E> tmp = first;
+            SLLNode<E> newsucc = null;
+            SLLNode<E> next;
+
+            while(tmp != null){
+                next = tmp.succ;
+                tmp.succ = newsucc;
+                newsucc = tmp;
+                tmp = next;
+            }
+            first = newsucc;
+        }
+    }
+}
+
+
+public class Main {
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        SLL<Integer> list= new SLL<>();
+        int N = sc.nextInt();
+        int brojac=0;
+
+        for (int i = 0; i < N; i++) {
+            list.insertLast(sc.nextInt());
+        }
+        System.out.println(list);
+
+        SLLNode<Integer> current = list.getFirst();
+            while (current != null) {
+                if(current.element%2==0){
+                    brojac++;
+                }
+                current = current.succ;
+            }
+            System.out.println(brojac);
+
+
+    }
+}
+
+
+
