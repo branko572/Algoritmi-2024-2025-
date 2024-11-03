@@ -26,6 +26,120 @@ Result
 
 
 import java.util.Scanner;
+
+class SLLNode<E> {
+    protected E element;
+    protected SLLNode<E> succ;
+
+    public SLLNode(E elem, SLLNode<E> succ) {
+        this.element = elem;
+        this.succ = succ;
+    }
+}
+
+class SLL<E> {
+    private SLLNode<E> first;
+
+    public SLL() {
+        // Construct an empty SLL
+        this.first = null;
+    }
+
+    public void deleteList() {
+        first = null;
+    }
+
+    public int size() {
+        int listSize = 0;
+        SLLNode<E> tmp = first;
+        while (tmp != null) {
+            listSize++;
+            tmp = tmp.succ;
+        }
+        return listSize;
+    }
+
+    @Override
+    public String toString() {
+        String ret = "";
+        if (first != null) {
+            ret = "{";
+            SLLNode<E> tmp = first;
+            ret += tmp.element;
+            while (tmp.succ != null) {
+                tmp = tmp.succ;
+                ret += "," + tmp.element;
+            }
+            ret += "}";
+        } else {
+            ret = "Prazna lista!!!";
+        }
+        return ret;
+    }
+
+    public void insertFirst(E o) {
+        SLLNode<E> ins = new SLLNode<>(o, null);
+        ins.succ = first;
+        first = ins;
+    }
+
+    public void insertLast(E o) {
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            while (tmp.succ != null)
+                tmp = tmp.succ;
+            tmp.succ = new SLLNode<>(o, null);
+        } else {
+            insertFirst(o);
+        }
+    }
+
+    public SLLNode<E> getFirst() {
+        return first;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        SLL<Integer> list = new SLL<>();
+
+        int N = sc.nextInt();
+        int sum = 0;
+        int average;
+
+        // Read and insert elements into the list
+        for (int i = 0; i < N; i++) {
+            int number = sc.nextInt();
+            list.insertLast(number);
+            sum += number;
+        }
+
+        // Calculate average
+        average = sum / N;
+
+        // Create a modified list with elements >= average
+        SLL<Integer> modlist = new SLL<>();
+        SLLNode<Integer> current = list.getFirst();
+        while (current != null) {
+            if (current.element >= average) {
+                modlist.insertLast(current.element);
+            }
+            current = current.succ;
+        }
+
+        // Print results
+        System.out.println(list);
+
+        System.out.println(modlist);
+    }
+}
+
+-------------------------------------------------------------------------------------
+
+
+import java.util.Scanner;
 import java.util.List;
 import java.util.ArrayList;
 
