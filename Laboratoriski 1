@@ -191,3 +191,148 @@ public class LabVezba1 {
         System.out.println("}");  // Closing the filtered list
     }
 }
+
+
+Дадена е еднострана поврзана листа чии што јазли содржат по еден String. Дополнително, даден е и уште еден природен број L. Во дадената листа после секој јазол којшто содржи String со должина L да се вметне нов јазол со вредност "Target".
+
+Влез: Во првиот ред од влезот е даден бројот на елементи во листата - N, па во следните N редови се дадени самите елементи (String-ови) од листата. На крај, во последниот ред е даден бројот L. 
+
+Излез: На излез треба да се испечати листата пред и после промената.
+
+/
+
+You are given a single linked list with String nodes. Additionally, you are given one more integer L. You need to insert a new node with value "Target" after each node that contains a String with exactly L characters in the list.
+
+Input: In the first line from the input the number of elements in the list is given - N, and then in the next N lines the elements themselves. In the last line, the integer L is given.
+
+Output: The list before and after the transformation
+
+
+For example:
+
+Input	
+3
+Sky
+Blue
+Cloud
+5
+
+Result
+Sky->Blue->Cloud
+Sky->Blue->Cloud->Target
+
+
+import java.util.Scanner;
+
+class SLLNode<E> {
+    protected E element;
+    protected SLLNode<E> succ;
+
+    public SLLNode(E elem, SLLNode<E> succ) {
+        this.element = elem;
+        this.succ = succ;
+    }
+}
+
+class SLL<E> {
+    private SLLNode<E> first;
+
+    public SLL() {
+        // Construct an empty SLL
+        this.first = null;
+    }
+
+    public void deleteList() {
+        first = null;
+    }
+
+    public int size() {
+        int listSize = 0;
+        SLLNode<E> tmp = first;
+        while (tmp != null) {
+            listSize++;
+            tmp = tmp.succ;
+        }
+        return listSize;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder ret = new StringBuilder();
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            ret.append(tmp.element);
+            while (tmp.succ != null) {
+                tmp = tmp.succ;
+                ret.append("->").append(tmp.element);
+            }
+        } else {
+            ret = new StringBuilder("Prazna lista!!!");
+        }
+        return ret.toString();
+    }
+
+    public void insertFirst(E o) {
+        SLLNode<E> ins = new SLLNode<>(o, null);
+        ins.succ = first;
+        first = ins;
+    }
+
+    public void insertLast(E o) {
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            while (tmp.succ != null)
+                tmp = tmp.succ;
+            tmp.succ = new SLLNode<>(o, null);
+        } else {
+            insertFirst(o);
+        }
+    }
+
+    public SLLNode<E> getFirst() {
+        return first;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        SLL<String> list = new SLL<>();
+
+        // Read the number of elements to insert
+        int N = sc.nextInt();
+        sc.nextLine(); // Consume the newline character
+        for (int i = 0; i < N; i++) {
+            String element = sc.nextLine();
+            list.insertLast(element);
+        }
+
+        int L = sc.nextInt(); // The target length for string elements
+
+        // Print the list before modification
+        System.out.println(list);
+
+        // Modify the list by inserting "Target" nodes
+        SLLNode<String> current = list.getFirst();
+        while (current != null) {
+            if (current.element.length() == L) {
+                // Create the "Target" node
+                SLLNode<String> targetNode = new SLLNode<>("Target", current.succ);
+                current.succ = targetNode; // Insert "Target" after the current node
+                current = targetNode.succ;  // Move current to the node after "Target"
+            } else {
+                current = current.succ; // Move to the next node
+            }
+        }
+
+        // Print the list after modification
+        System.out.println(list);
+
+
+    }
+}
+
+
+
+
+
