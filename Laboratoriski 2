@@ -1,3 +1,5 @@
+1.
+
 
 За дадена двојно поврзана листа од N цели броеви, треба да се најде бројот на елементи такви што просекот на елементите од пред него во листата е поголем од просекот на елементи после него во листата.
 
@@ -240,5 +242,216 @@ public class Main {
     }
 }
 
+2.
 
+
+Дадена е двострано поврзана листа од цели броеви. Дополнително, дадени се и уште еден цел број M и еден природен број k. Треба да се најде првото појавување на M во листата и тој број да се помести k места на лево.
+
+Влез: Во првиот ред од влезот е даден бројот на елементи во листата - N, па во следните следниот ред самите елементи одделени со празно место. На крај, во последните два реда дадени се целиот број M и природниот број k.
+
+Излез: На излез треба да се испечати листата пред и после промената.
+/
+
+You are given a doubly-linked list of integers. Additionally, there is one more integer M and a natural number k. You need to find the first occurence of M in the list and move that node k times to the left.
+
+Input: The first number in the input is the number of integers in the list - N, then in the next line the elements are given, separated by spaces. Then, in the last two lines, the integer M and the natural number k are given.
+
+Output: The list before and after the transformation
+
+For example:
+
+Input	
+5
+1 2 3 4 5
+3
+2
+Result
+1<->2<->3<->4<->5
+3<->1<->2<->4<->5
+
+Input	
+9
+5 3 8 6 2 4 1 9 7
+4
+7
+Result
+5<->3<->8<->6<->2<->4<->1<->9<->7
+5<->3<->8<->6<->2<->1<->9<->4<->7
+
+Input	
+10
+1 2 3 4 5 6 7 8 9 10
+11
+7
+Result
+1<->2<->3<->4<->5<->6<->7<->8<->9<->10
+Elementot ne postoi vo listata
+1<->2<->3<->4<->5<->6<->7<->8<->9<->10
+
+
+ import java.util.Scanner;
+
+class DLLNode<E> {
+    protected E element;
+    protected DLLNode<E> pred, succ;
+
+    public DLLNode(E elem, DLLNode<E> pred, DLLNode<E> succ) {
+        this.element = elem;
+        this.pred = pred;
+        this.succ = succ;
+    }
+
+    @Override
+    public String toString() {
+        return element.toString();
+    }
+}
+
+class DLL<E> {
+    private DLLNode<E> first, last;
+
+    public DLL() {
+        this.first = null;
+        this.last = null;
+    }
+
+    public void insertFirst(E o) {
+        DLLNode<E> ins = new DLLNode<>(o, null, first);
+        if (first == null)
+            last = ins;
+        else
+            first.pred = ins;
+        first = ins;
+    }
+
+    public void insertLast(E o) {
+        if (first == null)
+            insertFirst(o);
+        else {
+            DLLNode<E> ins = new DLLNode<>(o, last, null);
+            last.succ = ins;
+            last = ins;
+        }
+    }
+
+    public DLLNode<E> find(E o) {
+        DLLNode<E> tmp = first;
+        while (tmp != null) {
+            if (tmp.element.equals(o)) {
+                return tmp;
+            }
+            tmp = tmp.succ;
+        }
+        return null;
+    }
+
+    public void delete(DLLNode<E> node) {
+        if (node == first) {
+            deleteFirst();
+        } else if (node == last) {
+            deleteLast();
+        } else {
+            node.pred.succ = node.succ;
+            node.succ.pred = node.pred;
+        }
+    }
+
+    public void insertBefore(E o, DLLNode<E> before) {
+        if (before == first) {
+            insertFirst(o);
+        } else {
+            DLLNode<E> ins = new DLLNode<>(o, before.pred, before);
+            before.pred.succ = ins;
+            before.pred = ins;
+        }
+    }
+
+    public E deleteFirst() {
+        if (first != null) {
+            DLLNode<E> tmp = first;
+            first = first.succ;
+            if (first != null) first.pred = null;
+            if (first == null)
+                last = null;
+            return tmp.element;
+        } else
+            return null;
+    }
+
+    public E deleteLast() {
+        if (first != null) {
+            if (first.succ == null) return deleteFirst();
+            else {
+                DLLNode<E> tmp = last;
+                last = last.pred;
+                last.succ = null;
+                return tmp.element;
+            }
+        } else
+            return null;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder ret = new StringBuilder();
+        DLLNode<E> tmp = first;
+        while (tmp != null) {
+            ret.append(tmp.element);
+            if (tmp.succ != null) ret.append("<->");
+            tmp = tmp.succ;
+        }
+        return ret.toString();
+    }
+
+    public DLLNode<E> getFirst() {
+        return first;
+    }
+
+    public DLLNode<E> getLast() {
+        return last;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Read list
+        int N = sc.nextInt();
+        DLL<Integer> dll = new DLL<>();
+        for (int i = 0; i < N; i++) {
+            dll.insertLast(sc.nextInt());
+        }
+
+        // Read M and K
+        int M = sc.nextInt();
+        int K = sc.nextInt();
+
+        // Print the original list
+        System.out.println(dll);
+
+        // Find the node containing M
+        DLLNode<Integer> nodeM = dll.find(M);
+
+        // If M does not exist in the list
+        if (nodeM == null) {
+            System.out.println("Elementot ne postoi vo listata");
+            System.out.println(dll);
+            return;
+        }
+
+        // Move M exactly K steps to the left, wrapping around if needed
+        DLLNode<Integer> targetPosition = nodeM;
+        for (int i = 0; i < K; i++) {
+            targetPosition = targetPosition.pred != null ? targetPosition.pred : dll.getLast();
+        }
+
+        // Remove M from its current position and reinsert it at the target position
+        dll.delete(nodeM);
+        dll.insertBefore(M, targetPosition);
+
+        // Print the modified list
+        System.out.println(dll);
+    }
+}
 
