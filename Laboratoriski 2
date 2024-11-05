@@ -1,0 +1,244 @@
+
+За дадена двојно поврзана листа од N цели броеви, треба да се најде бројот на елементи такви што просекот на елементите од пред него во листата е поголем од просекот на елементи после него во листата.
+
+Влез: Првиот број од влезот е бројот на елементи во листата N, а потоа во следниот ред се дадени самите елементи одделени со празно место.
+
+Излез: Бројот на елементи што го задоволуваат условот.
+
+/
+
+For a given doubly-linked list with N integers, you need to find the number of elements such that the average of all elements before it is bigger than the average of all elements after it in the list. 
+
+Input: The first number in the input is the number of integers in the list N, then in the next line the elements are given, separated by spaces.
+
+Output: The number of elements that satisfy the condition.
+
+For example:
+
+Input	
+5
+1 2 3 4 5
+Result
+0
+
+Input	
+4
+5 4 3 2
+Result
+2
+
+import java.util.Scanner;
+
+class DLLNode<E> {
+    protected E element;
+    protected DLLNode<E> pred, succ;
+
+    public DLLNode(E elem, DLLNode<E> pred, DLLNode<E> succ) {
+        this.element = elem;
+        this.pred = pred;
+        this.succ = succ;
+    }
+}
+
+class DLL<E> {
+    private DLLNode<E> first, last;
+
+    public DLL() {
+        this.first = null;
+        this.last = null;
+    }
+
+    public void insertLast(E o) {
+        if (first == null) {
+            first = new DLLNode<>(o, null, null);
+            last = first;
+        } else {
+            DLLNode<E> ins = new DLLNode<>(o, last, null);
+            last.succ = ins;
+            last = ins;
+        }
+    }
+
+    public DLLNode<E> getFirst() {
+        return first;
+    }
+
+    public int getSize() {
+        int size = 0;
+        DLLNode<E> tmp = first;
+        while (tmp != null) {
+            size++;
+            tmp = tmp.succ;
+        }
+        return size;
+    }
+
+    public int getSum() {
+        int sum = 0;
+        DLLNode<Integer> tmp = (DLLNode<Integer>) first;
+        while (tmp != null) {
+            sum += tmp.element;
+            tmp = tmp.succ;
+        }
+        return sum;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        DLL<Integer> list = new DLL<>();
+
+        int N = sc.nextInt();
+        for (int i = 0; i < N; i++) {
+            list.insertLast(sc.nextInt());
+        }
+
+        int totalSum = list.getSum();
+        int totalSize = list.getSize();
+        int count = 0;
+
+        DLLNode<Integer> current = list.getFirst();
+        int sumBefore = 0;
+        int sizeBefore = 0;
+
+        while (current != null) {
+            int sumAfter = totalSum - sumBefore - current.element;
+            int sizeAfter = totalSize - sizeBefore - 1;
+
+            // Only check the condition if there are elements both before and after
+            if (sizeBefore > 0 && sizeAfter > 0) {
+                double avgBefore = (double) sumBefore / sizeBefore;
+                double avgAfter = (double) sumAfter / sizeAfter;
+
+                if (avgBefore > avgAfter) {
+                    count++;
+                }
+            }
+
+            // Update the sum and size for the "before" part
+            sumBefore += current.element;
+            sizeBefore++;
+
+            // Move to the next element
+            current = current.succ;
+        }
+
+        System.out.println(count);
+    }
+}
+
+
+---------------------------------------------------------------------------------------------
+
+
+import java.util.Scanner;
+
+class DLLNode<E> {
+    protected E element;
+    protected DLLNode<E> pred, succ;
+
+    public DLLNode(E elem, DLLNode<E> pred, DLLNode<E> succ) {
+        this.element = elem;
+        this.pred = pred;
+        this.succ = succ;
+    }
+}
+
+class DLL<E extends Number> {
+    private DLLNode<E> first, last;
+
+    public DLL() {
+        this.first = null;
+        this.last = null;
+    }
+
+    public void insertLast(E o) {
+        if (first == null) {
+            first = new DLLNode<>(o, null, null);
+            last = first;
+        } else {
+            DLLNode<E> ins = new DLLNode<>(o, last, null);
+            last.succ = ins;
+            last = ins;
+        }
+    }
+
+    public int getSize() {
+        int size = 0;
+        DLLNode<E> current = first;
+        while (current != null) {
+            size++;
+            current = current.succ;
+        }
+        return size;
+    }
+
+    public DLLNode<E> getFirst() {
+        return first;
+    }
+
+    public DLLNode<E> getLast() {
+        return last;
+    }
+
+    // Method to count nodes meeting the condition
+    public int countMatchingNodes() {
+        int n = getSize();
+        if (n < 3) return 0; // No valid nodes if list size is less than 3
+
+        double[] prefixSum = new double[n];
+        double[] suffixSum = new double[n];
+        DLLNode<E> current = first;
+
+        // Step 1: Calculate prefix sums
+        int index = 0;
+        double totalSum = 0;
+        while (current != null) {
+            totalSum += current.element.doubleValue();
+            prefixSum[index] = totalSum;
+            current = current.succ;
+            index++;
+        }
+
+        // Step 2: Calculate suffix sums
+        current = last;
+        index = n - 1;
+        totalSum = 0;
+        while (current != null) {
+            totalSum += current.element.doubleValue();
+            suffixSum[index] = totalSum;
+            current = current.pred;
+            index--;
+        }
+
+        // Step 3: Count elements meeting the condition
+        int count = 0;
+        for (int i = 1; i < n - 1; i++) {  // Start from 1 to n-1 to avoid empty segments
+            double prefixAvg = prefixSum[i - 1] / i;
+            double suffixAvg = suffixSum[i + 1] / (n - i - 1);
+            if (prefixAvg > suffixAvg) {
+                count++;
+            }
+        }
+        return count;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int N = scanner.nextInt(); // Number of elements
+        DLL<Integer> dll = new DLL<>();
+
+        for (int i = 0; i < N; i++) {
+            dll.insertLast(scanner.nextInt());
+        }
+
+        System.out.println(dll.countMatchingNodes());
+    }
+}
+
+
+
