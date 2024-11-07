@@ -228,6 +228,226 @@ public class Main {
 
 }
 
+----------------------------------------------------------------------------------------------------------------
+
+
+import java.util.Scanner;
+import java.util.ArrayList;
+
+class Chessboard {
+
+    public int dalisenapagjaat(int x, int y, int x2, int y2) {
+
+        if(x==x2){
+            return 1;
+        }
+        if(y==y2){
+            return 1;
+        }
+
+        if(Math.abs(x-x2)==Math.abs(y-y2)){
+            return 1;
+        }
+        return 0;
+
+    }
+
+
+    int brojnanacini() {
+            int broj = 0;
+        for(int x=0; x<8; x++){
+            for(int y=0; y<8; y++){
+                for(int x2=0; x2<8; x2++){
+                    for(int y2=0; y2<8; y2++){
+                        if(dalisenapagjaat(x,y,x2,y2)==0){
+                            broj++;
+                        }
+                    }
+                }
+            }
+        }
+        return broj;
+    }
+
+
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        
+            Chessboard cb = new Chessboard();
+
+            System.out.println(cb.brojnanacini());
+    }
+}
+
+
+Задача 3
+
+• Дадени се парички со одредена вредност
+(постојат парички од 50, 10, 5, 2 и 1 денар), и
+притоа бројот на парички од секоја вредност е
+неограничен. За дадена сума да се определи
+најмалиот број на парички кои се потребни да
+се формира таа сума.
+
+
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int sum = sc.nextInt();  // Input the sum we want to form
+        int[] moneti = {50, 10, 5, 2, 1};  // Coin denominations in descending order
+
+        int coincount = 0;  // Variable to store the total number of coins
+
+        // Loop through each coin denomination, starting with the largest
+        for (int i = 0; i < moneti.length; i++) {
+            coincount += sum / moneti[i];  // Add number of coins of this denomination
+            sum %= moneti[i];  // Reduce the sum by the number of coins used
+        }
+
+        System.out.println(coincount);  // Output the total number of coins
+    }
+}
+
+
+
+Задача 4
+• Студент се спрема да оди на патување.
+Дозволено му е да носи еден куфер со
+максимална тежина од 20 кг. Студентот се
+двоуми помеѓу облека, книги и друштвени
+игри. Откако ги измерил и оценил овие работи,
+студентот ја добил следната табела:
+ 
+# Објект Вредност Тежина
+1 Облека 200 10
+2 Книги 150 20
+3 Монопол, карти… 5 0.5
+4 CD player, MP3 player… 80 5                                                                                                                Што да понесе студентот, така што вредноста
+на понесените работи да биде максимална?
+
+• Постојат две верзии на овој проблем:
+
+– Fractional knapsack проблем: Студентот може да
+земе делови од објекти односно може да се одлучи
+да понесе само еден дел x i од објектот оi
+, каде 0 ≤ x  i≤ 1.
+
+– 0-1 knapsack проблем: проблемот е исто поставен,
+но објектите не можат да се поделат на помали
+делови, така што студентот ќе мора да се одлучи
+дали ќе го земе објектот или не. Значи не може да
+земе само дел од објектот (x i =0 или x i =1)     
+
+(fractional knapsack) –анализа
+• За да се реши Fractional knapsack (предметите
+може да се земаат по делови) проблемот може
+да го користиме архетипот "Алчен алгоритам".
+• На пример, нека е даден следниот проблем:
+бројот на објекти е 3 (n=3), капацитетот на
+ранецот е C=20, вредноста за секој од
+објектите е дадена со (p1, p2, p3) = (25, 24, 15) и
+тежините на објектите изнесуваат (t1, t2, t3) =
+(18, 15, 10). Да се пополни ранецот со објекти
+за да се добие максимален профит. 
+
+(fractional knapsack) –анализа
+• Доколку можеме да земеме дел од дадените
+предмети без ограничувања, оптималното
+решение ќе се добие со пресметување на
+релативната вредност на предметот во однос
+на неговата тежина
+• Алчен избор: прво земи ги предметите што
+вредат најмногу а тежат најмалку
+
+Се пресметува односот p/t, вредност според
+тежина
+• Се подредуваат преметите според
+пресметаниот сооднос
+• Ранецот прво се пополнува со предметите кои
+имаат најголема релативна вредност во однос
+на тежина
+
+
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Define the profits and weights of the items
+        int[] p = new int[]{25, 24, 15};  // Profits
+        int[] t = new int[]{18, 15, 10};  // Weights
+
+        // Create an array to store the fractions of items taken
+        float[] x = new float[3];
+
+        // Call the profit function and print the result
+        Main knapsack = new Main();
+        System.out.println("Maximum profit: " + knapsack.profit(p, t, 3, 20, x));
+
+        // Print the solution vector (fractions of items taken)
+        System.out.print("Solution vector: ");
+        for (float fraction : x) {
+            System.out.print(fraction + " ");
+        }
+    }
+
+    // Sorting function to sort items by value/weight ratio in descending order
+    void sort(int[] p, int[] t, int n) {
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = i + 1; j < n; j++) {
+                float p1 = (float) p[i] / t[i];
+                float p2 = (float) p[j] / t[j];
+
+                if (p1 < p2) { // If item i has lower value/weight ratio than item j
+                    // Swap the items
+                    int tmpP = p[i];
+                    int tmpT = t[i];
+                    p[i] = p[j];
+                    t[i] = t[j];
+                    p[j] = tmpP;
+                    t[j] = tmpT;
+                }
+            }
+        }
+    }
+
+    // Function to calculate maximum profit from the fractional knapsack
+    float profit(int[] p, int[] t, int n, float C, float[] x) {
+        // Sort items by their value/weight ratio in descending order
+        sort(p, t, n);
+
+        float profit = 0;
+
+        // Iterate through the sorted items
+        for (int i = 0; i < n; i++) {
+            if (C >= t[i]) {
+                // Take the entire item if the knapsack can accommodate it
+                x[i] = 1;
+                C -= t[i];
+                profit += p[i];  // Add the profit of the full item
+            } else {
+                // Take a fraction of the item if it doesn't fit entirely
+                x[i] = C / (float) t[i];
+                profit += x[i] * p[i];  // Add the fractional profit
+                C = 0;  // The knapsack is full now
+                break;  // No more items can be added
+            }
+        }
+
+        return profit;
+    }
+}
+
+
+
 
 
 
