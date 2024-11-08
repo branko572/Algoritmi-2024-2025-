@@ -98,4 +98,123 @@ Result
 60
 
 
+import java.util.Arrays;
+import java.util.Scanner;
+
+class Task implements Comparable<Task> {
+    int time;      // Time required for the task in hours
+    int earnings;  // Earnings for the task
+
+    // Constructor for Task
+    Task(int time, int earnings) {
+        this.time = time;
+        this.earnings = earnings;
+    }
+
+    // Calculate earnings per hour, used for sorting tasks
+    double getEarningsPerHour() {
+        return (double) earnings / time;
+    }
+
+    // Sort tasks by earnings per hour in descending order
+    @Override
+    public int compareTo(Task other) {
+        return Double.compare(other.getEarningsPerHour(), this.getEarningsPerHour());
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Read the number of tasks
+        int N = sc.nextInt();
+        Task[] tasks = new Task[N];
+
+        // Read each task's time and earnings and create Task objects
+        for (int i = 0; i < N; i++) {
+            int time = sc.nextInt();
+            int earnings = sc.nextInt();
+            tasks[i] = new Task(time, earnings);
+        }
+
+        // Sort tasks by earnings per hour in descending order
+        Arrays.sort(tasks);
+
+        int remainingHours = 40;  // Maximum working hours in a week
+        double maxEarnings = 0;   // Accumulated earnings
+
+        // Iterate over sorted tasks to maximize earnings within 40 hours
+        for (Task task : tasks) {
+            if (remainingHours >= task.time) {
+                // If we have enough time to complete this task fully
+                maxEarnings += task.earnings;
+                remainingHours -= task.time;
+            } else {
+                // If not enough time, take a fractional part of the task
+                maxEarnings += task.getEarningsPerHour() * remainingHours;
+                break;  // We have used up the 40 hours
+            }
+        }
+
+        // Print the maximum possible earnings within the 40-hour limit
+        System.out.println(maxEarnings);
+    }
+}
+
+
+------------------------------------------------------------------------------------
+
+
+
+import java.util.Scanner;
+
+class vezba2 {
+    public static void sortirajOdnos(int z[], int v[]){
+        int n = z.length;
+        int tmpV, tmpZ;
+        for(int i = 0; i<n; i++){
+            for(int j = i+1; j<n; j++){
+                if(((float) z[i]/ (float) v[i]) < ((float) z[j]/ (float) v[j])){
+                    tmpZ = z[i];
+                    tmpV = v[i];
+                    z[i] = z[j];
+                    v[i] = v[j];
+                    v[j] = tmpV;
+                    z[j] = tmpZ;
+                }
+            }
+        }
+    }
+    public static float calculate(int z[], int v[])
+    {
+        int n = z.length;
+        sortirajOdnos(z, v);
+        float result = 0.0f;
+        float time = 40f;
+        for(int i = 0; i<n; i++){
+            if(time > v[i]){
+                result += z[i];
+                time-=v[i];
+            } else {
+                result += (time / (float) v[i]) * (float) z[i];
+                time = 0;
+                break;
+            }
+        }
+        return result;
+    }
+    public static void main(String[] args){
+        Scanner input =  new Scanner(System.in);
+        int n = input.nextInt();
+        int []zarabotka = new int[n];
+        int []vreme = new int[n];
+        for(int i = 0; i < n; i++){
+            vreme[i] = input.nextInt();
+            zarabotka[i] = input.nextInt();
+        }
+        System.out.println(calculate(zarabotka, vreme));
+        input.close();
+    }
+}
 
