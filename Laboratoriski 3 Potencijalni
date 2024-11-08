@@ -1,0 +1,69 @@
+Дадена е улица на која има поставено места за улични светилки. 
+Улицата е со должина M и N такви места на кои можат да се постават улични светилки и нивната позиција е дадена во една низа. 
+Ако знаеме дека една светилка освен својата позиција осветлува и уште две позиции во лево и две во десно, да се најде најмалиот број на светилки со кои може да се осветли улицата.
+Не мора да поставуваме светилка на секоја можна позиција.  
+Влез: Првиот број од влезот е бројот на позиции за светилки N и должината на улицата M, а потоа во следниот ред се дадените можните позиции за поставување на светилки. 
+Излез: Минимален број на светилки за да се осветли улицата.   
+
+Input                                                                           
+5 5                                                                                  
+1 2 3 4 5  
+
+Result                                                                            
+1   
+
+Input                                                                                
+3 10                                                                                     
+3 8 9 
+
+Result                                                                              
+2
+
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Read number of positions and length of the street
+        int N = sc.nextInt();
+        int M = sc.nextInt();
+
+        // Read possible positions for placing streetlights
+        int[] positions = new int[N];
+        for (int i = 0; i < N; i++) {
+            positions[i] = sc.nextInt();
+        }
+
+        // Sort positions for a greedy approach
+        Arrays.sort(positions);
+
+        int lights = 0;  // Number of streetlights placed
+        int currentPos = 1;  // Current unlit position on the street
+        int i = 0;  // Index for positions array
+
+        // Greedily place streetlights
+        while (currentPos <= M) {
+            // Find the farthest position that can cover currentPos
+            int bestPos = -1;
+            while (i < N && positions[i] <= currentPos + 2) {
+                bestPos = positions[i];
+                i++;
+            }
+
+            // If there's no valid position to cover currentPos, the street can't be fully lit
+            if (bestPos == -1) {
+                System.out.println(-1);  // Street can't be fully covered
+                return;
+            }
+
+            // Place a streetlight at bestPos
+            lights++;
+            currentPos = bestPos + 3;  // Move to the next unlit position after the coverage of bestPos
+        }
+
+        System.out.println(lights);  // Output the minimal number of streetlights
+    }
+}
+
