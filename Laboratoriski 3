@@ -56,3 +56,46 @@ public class Main {
     }
 }
 
+----------------------------------------------------------------------------------
+
+
+
+
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int N = sc.nextInt();
+        int array[] = new int[N];
+
+        // Reading input values into the array
+        for(int i = 0; i < N; i++) {
+            array[i] = sc.nextInt();
+        }
+
+        // Displaying original array
+
+       
+
+        // Bubble sort in descending order
+        for(int i = 0; i < N - 1; i++) {
+            for(int j = 0; j < N - 1 - i; j++) {
+                if(array[j] < array[j + 1]) {  // Corrected comparison for descending order
+                    int temp = array[j];
+                    array[j] = array[j + 1];
+                    array[j + 1] = temp;
+                }
+            }
+        }
+
+        // Displaying sorted array
+
+        for(int i = 0; i < N; i++) {
+            System.out.print(array[i]);
+        }
+    }
+}
+
+
+
