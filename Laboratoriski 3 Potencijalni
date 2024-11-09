@@ -218,3 +218,84 @@ class vezba2 {
     }
 }
 
+
+------------------------------------------------------------------------------------
+
+
+
+import java.util.Scanner;
+
+
+
+
+
+
+
+
+public class Main {
+
+    static void SortTask(int []vreme, int []zarabotka){
+
+        int n = vreme.length;
+        for(int i = 0; i < n; i++){
+            for(int j = i+1; j < n; j++){
+                if(vreme[i]/zarabotka[i]<vreme[j]/zarabotka[j]){
+                    int tempV = vreme[i];
+                    vreme[i] = vreme[j];
+                    vreme[j] = tempV;
+                    int tempZ= zarabotka[i];
+                    zarabotka[i] = zarabotka[j];
+                    zarabotka[j] = tempZ;
+                }
+            }
+        }
+
+    }
+
+   static int Calculate(int []vreme, int []zarabotka){
+
+        int n = vreme.length;
+        SortTask(vreme,zarabotka);
+
+        int rem_time=40;
+        int rezultat=0;
+
+        for(int i=0;i<n;i++){
+            if(rem_time>vreme[i]){
+                rezultat+=zarabotka[i];
+                rem_time-=vreme[i];
+            }
+            else{
+                rezultat+=((float)rem_time/vreme[i])*zarabotka[i];
+                break;
+            }
+        }
+        return rezultat;
+
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int N = sc.nextInt();
+        int []vreme = new int[N];
+        int []zarabotka = new int[N];
+
+        for (int i = 0; i < N; i++) {
+            vreme[i] = sc.nextInt();
+            zarabotka[i] = sc.nextInt();
+        }
+        SortTask(vreme,zarabotka);
+
+        int Rezultat=Calculate(vreme,zarabotka);
+        System.out.println(Rezultat);
+
+
+
+
+
+    }
+
+}
+
+
+
