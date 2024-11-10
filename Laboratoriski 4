@@ -63,3 +63,51 @@ public class Main {
 
 
 
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Read input size N and target M
+        int N = sc.nextInt();
+        int M = sc.nextInt();
+        int[] array = new int[N];
+
+        // Read the array elements
+        for (int i = 0; i < N; i++) {
+            array[i] = sc.nextInt();
+        }
+
+        // Perform binary search
+        int result = binarySearch(array, M, 0, N - 1);
+
+        // Output the result
+        if (result == -1) {
+            System.out.println("Ne postoi");
+        } else {
+            System.out.println(result); // Print position as 1-based index
+        }
+
+        sc.close();
+    }
+
+    // Binary search function using recursion
+    public static int binarySearch(int[] array, int target, int low, int high) {
+        if (low <= high) {
+            int mid = (low + high) / 2;
+
+            if (array[mid] == target) {
+                return mid; // Return the position as zero-based index
+            } else if (array[mid] < target) {
+                return binarySearch(array, target, mid + 1, high);
+            } else {
+                return binarySearch(array, target, low, mid - 1);
+            }
+        }
+        return -1; // Target not found
+    }
+}
+
+
+
