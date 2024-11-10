@@ -517,5 +517,54 @@ public class Main {
 }
 
 
+Задача 5
+
+• Да се напише функција која ќе го пресмета nтиот степен на некој број со примена на
+техниката "Раздели и владеј".
+
+
+import java.util.Scanner;
+
+public class Main {
+
+    public static int power(int x, int n) {
+        // Основен случај: секој број на степен 0 е 1
+        if (n == 0) {
+            return 1;
+        }
+        // Ако степенот е негативен, ја пресметуваме инверзната вредност
+        if (n < 0) {
+            return 1 / power(x, -n);
+        }
+        // Ако степенот е парен
+        if (n % 2 == 0) {
+            int halfPower = power(x, n / 2);
+            return halfPower * halfPower;
+        }
+        // Ако степенот е непарен
+        else {
+            int halfPower = power(x, (n - 1) / 2);
+            return x * halfPower * halfPower;
+        }
+    }
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        int X = sc.nextInt();
+        int N = sc.nextInt();
+
+        System.out.println(X + " raised to the power of " + N+ " is: " + power(X, N));
+    }
+}
+
+
+
+
+
+
+
+
+
 
 
