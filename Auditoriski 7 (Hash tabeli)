@@ -185,5 +185,627 @@ public class Main {
 
 Излез: Деталите на понудата за тој датум.
 
+Пример
+
+Влез:
+7
+27/01/2016 14:00 NewYork 6000
+28/01/2016 08:00 Paris 3000
+28/01/2016 14:00 Munich 5000
+27/01/2016 09:00 Beijing 8000
+27/01/2016 08:00 Seattle 4000
+28/01/2016 09:00 SaltLakeCity 10000
+28/01/2016 09:00 Lagos 12000
+27/01/2016
+Излез:
+09:00 Beijing 8000
+ 
+
+
+
+
+
+import java.util.Scanner;
+
+class SLLNode<E> {
+    protected E element;
+    protected SLLNode<E> succ;
+
+    public SLLNode(E elem, SLLNode<E> succ) {
+        this.element = elem;
+        this.succ = succ;
+    }
+
+    @Override
+    public String toString() {
+        return element.toString();
+    }
+}
+
+
+
+class MapEntry<K extends Comparable<K>, E> {
+    // Each MapEntry object is a pair consisting of a key (a Comparable object)
+    // and a value (an arbitrary object).
+    K key;
+    E value;
+
+    public MapEntry(K key, E val) {
+        this.key = key;
+        this.value = val;
+    }
+
+    public String toString() {
+        return "<" + key + "," + value + ">";
+    }
+}
+
+
+
+ class CBHT<K extends Comparable<K>, E> {
+
+    // An object of class CBHT is a closed-bucket hash table, containing
+    // entries of class MapEntry.
+    private SLLNode<MapEntry<K, E>>[] buckets;
+
+    @SuppressWarnings("unchecked")
+    public CBHT(int m) {
+        // Construct an empty CBHT with m buckets.
+        buckets = (SLLNode<MapEntry<K, E>>[]) new SLLNode[m];
+    }
+
+    private int hash(K key) {
+        // Translate key to an index of the array buckets.
+        return Math.abs(key.hashCode()) % buckets.length;
+    }
+
+    public SLLNode<MapEntry<K, E>> search(K targetKey) {
+        // Find which if any node of this CBHT contains an entry whose key is equal to targetKey.
+        // Return a link to that node (or null if there is none).
+        int b = hash(targetKey);
+        SLLNode<MapEntry<K, E>> currNode = buckets[b];
+        while (currNode != null) {
+            MapEntry<K, E> currEntry = currNode.element;
+            if (currEntry.key.equals(targetKey)) return currNode;
+            else currNode = currNode.succ;
+        }
+        return null;
+    }
+
+    public void insert(K key, E val) {
+        // Insert the entry <key, val> into this CBHT.
+        // If entry with same key exists, overwrite it.
+        MapEntry<K, E> newEntry = new MapEntry<>(key, val);
+        int b = hash(key);
+        SLLNode<MapEntry<K, E>> currNode = buckets[b];
+        while (currNode != null) {
+            MapEntry<K, E> currEntry = currNode.element;
+            if (currEntry.key.equals(key)) {
+                // Make newEntry replace the existing entry ...
+                currNode.element = newEntry;
+                return;
+            } else currNode = currNode.succ;
+        }
+        // Insert newEntry at the front of the SLL in bucket b ...
+        buckets[b] = new SLLNode<>(newEntry, buckets[b]);
+    }
+
+    public void delete(K key) {
+        // Delete the entry (if any) whose key is equal to key from this CBHT.
+        int b = hash(key);
+        SLLNode<MapEntry<K, E>> predNode = null, currNode = buckets[b];
+        while (currNode != null) {
+            MapEntry<K, E> currEntry = currNode.element;
+            if (currEntry.key.equals(key)) {
+                if (predNode == null) buckets[b] = currNode.succ;
+                else predNode.succ = currNode.succ;
+                return;
+            } else {
+                predNode = currNode;
+                currNode = currNode.succ;
+            }
+        }
+    }
+
+    public String toString() {
+        String temp = "";
+        for (int i = 0; i < buckets.length; i++) {
+            temp += i + ":";
+            SLLNode<MapEntry<K, E>> curr = buckets[i];
+            while (curr != null) {
+                temp += curr.element.toString() + " ";
+                curr = curr.succ;
+            }
+            temp += "\n";
+        }
+        return temp;
+    }
+}
+
+
+
+
+class Lecture{
+    String date;
+    String time;
+    String place;
+    Integer fee;
+
+
+
+    public Lecture(String date, String time, String place, Integer fee) {
+
+        this.date = date;
+        this.time = time;
+        this.place = place;
+        this.fee = fee;
+    }
+
+    public String getDate() {
+        return date;
+    }
+    public String getTime() {
+        return time;
+    }
+    public String getPlace() {
+        return place;
+    }
+    public Integer getFee() {
+        return fee;
+
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void setPlace(String place) {
+        this.place = place;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public void setFee(Integer fee) {
+        this.fee = fee;
+    }
+}
+
+
+
+
+
+
+public class Main {
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+        int N = sc.nextInt();
+
+            CBHT<String, Lecture> hashtable = new CBHT<>(N*2);
+            for (int i = 0; i < N; i++) {
+                Lecture p= new Lecture(sc.next(), sc.next(), sc.next(), sc.nextInt());
+                if(hashtable.search(p.getDate())==null){
+                    hashtable.insert(p.getDate(), p);
+                }
+                else {
+                    SLLNode<MapEntry<String, Lecture>>bestDate = hashtable.search(p.getDate());
+                    Lecture bestLectureDate=bestDate.element.value;
+                    if(p.getFee()>bestLectureDate.getFee()){
+                        hashtable.insert(p.getDate(), p);
+                    }
+                }
+            }
+            String date=sc.next();
+            SLLNode<MapEntry<String, Lecture>>result = hashtable.search(date);
+            if(result!=null){
+                Lecture best=result.element.value;
+                System.out.println(best.getTime()+" " + best.getPlace() +" " +best.getFee());
+            }
+            else {
+                System.out.println("No offer found");
+            }
+
+
+    }
+}
+
+
+Задача 3. 
+Црвен крст
+Во рамки на една хуманитарна организација,потребно е да се направи статистика за крвните групикои се на располагање за донација, и од коидонатори. 
+Подгрупите А1+, А2+ припаѓаат на крвнагрупа А+, додека А1- , А2- припаѓаат на група А-.
+
+
+Пример
+
+Влез:
+5
+Alek A1+
+Dejan BSandra A+
+Trajce 0+
+Rebeka A1-
+
+Излез:
+A+ = 2
+B- = 1
+0+ = 1
+A- = 1
+
+
+
+
+
+import java.util.Scanner;
+
+class MapEntry<K extends Comparable<K>, E> {
+    // Each MapEntry object is a pair consisting of a key (a Comparable object)
+    // and a value (an arbitrary object).
+    K key;
+    E value;
+
+    public MapEntry(K key, E val) {
+        this.key = key;
+        this.value = val;
+    }
+
+    public String toString() {
+        return "<" + key + "," + value + ">";
+    }
+}
+
+
+
+class OBHT<K extends Comparable<K>, E> {
+
+    // An object of class OBHT is an open-bucket hash table, containing entries
+    // of class MapEntry.
+    private MapEntry<K, E>[] buckets;
+
+    // buckets[b] is null if bucket b has never been occupied.
+    // buckets[b] is former if bucket b is formerly-occupied
+    // by an entry that has since been deleted (and not yet replaced).
+
+    static final int NONE = -1; // ... distinct from any bucket index.
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static final MapEntry former = new MapEntry(null, null);
+    // This guarantees that, for any genuine entry e,
+    // e.key.equals(former.key) returns false.
+
+    private int occupancy = 0;
+    // ... number of occupied or formerly-occupied buckets in this OBHT.
+
+    @SuppressWarnings("unchecked")
+    public OBHT(int m) {
+        // Construct an empty OBHT with m buckets.
+        buckets = (MapEntry<K, E>[]) new MapEntry[m];
+    }
+
+
+    private int hash(K key) {
+        // Translate key to an index of the array buckets.
+        return Math.abs(key.hashCode()) % buckets.length;
+    }
+
+
+    public int search(K targetKey) {
+        // Find which if any bucket of this OBHT is occupied by an entry whose key
+        // is equal to targetKey. Return the index of that bucket.
+        int b = hash(targetKey);
+
+        for (int n_search = 0; n_search < buckets.length; n_search++) {
+            MapEntry<K, E> currEntry = buckets[b];
+            if (currEntry == null) return NONE;
+            else if (currEntry.key.equals(targetKey)) return b;
+            else b = (b + 1) % buckets.length;
+        }
+        return NONE;
+    }
+
+    public MapEntry<K, E> getBucket(int bucket) {
+        return buckets[bucket];
+    }
+
+
+    public void insert(K key, E val) {
+        // Insert the entry <key, val> into this OBHT.
+        MapEntry<K, E> newEntry = new MapEntry<K, E>(key, val);
+        int b = hash(key);
+        int n_search = 0;
+        Integer free_position = null;
+        Integer existing_position = null;
+        while (n_search < buckets.length) {
+            MapEntry<K, E> currEntry = buckets[b];
+            if (currEntry == null) {
+                if (free_position == null) free_position = b;
+                break;
+            } else if (key.equals(currEntry.key)) {
+                existing_position = b;
+                break;
+            } else {
+                if (currEntry == former && free_position == null) {
+                    free_position = b;
+                }
+                b = (b + 1) % buckets.length;
+                n_search++;
+            }
+        }
+        if (existing_position != null)
+            buckets[existing_position] = newEntry;
+        else if (free_position != null) {
+            buckets[free_position] = newEntry;
+            if (++occupancy == buckets.length) {
+                System.out.println("Hash tabelata e polna!!!");
+            }
+        } else {
+            // failed to insert, table was already full
+        }
+    }
+
+
+    @SuppressWarnings("unchecked")
+    public void delete(K key) {
+        // Delete the entry (if any) whose key is equal to key from this OBHT.
+        int b = hash(key);
+        int n_search = 0;
+        while (n_search < buckets.length) {
+            MapEntry<K, E> currEntry = buckets[b];
+            if (currEntry == null) return;
+            else if (currEntry.key.equals(key)) {
+                buckets[b] = former;
+                return;
+            } else {
+                b = (b + 1) % buckets.length;
+                n_search++;
+            }
+        }
+    }
+
+
+    public String toString() {
+        String temp = "";
+        for (int i = 0; i < buckets.length; i++) {
+            temp += i + ":";
+            if (buckets[i] == null)
+                temp += "\n";
+            else if (buckets[i] == former)
+                temp += "former\n";
+            else
+                temp += buckets[i] + "\n";
+        }
+        return temp;
+    }
+
+
+    public OBHT<K, E> clone() {
+        OBHT<K, E> copy = new OBHT<K, E>(buckets.length);
+        for (int i = 0; i < buckets.length; i++) {
+            MapEntry<K, E> e = buckets[i];
+            if (e != null && e != former)
+                copy.buckets[i] = new MapEntry<K, E>(e.key, e.value);
+            else
+                copy.buckets[i] = e;
+        }
+        return copy;
+    }
+}
+
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        OBHT<String, Integer> hashtable = new OBHT<String, Integer>(11);
+        int N = sc.nextInt();
+        for (int i = 1; i <= N; i++) {
+            String name = sc.next();
+            String key = sc.next().replaceAll("[1-2]", "");
+            int bucket = hashtable.search(key);
+            if (bucket == -1) hashtable.insert(key, 1);
+            else hashtable.insert(key, hashtable.getBucket(bucket).value + 1);
+        }
+        System.out.println(hashtable);
+    }
+}
+
+
+Влез: Во првиот ред од влезот е даден бројот напарови N, а во секој нареден ред се дадени паровите(донатор, крвна група).
+
+Излез: Да се испечати по колку донатори има одсекоја крвна група согласно внесените податоци.
+
+Пример
+
+Влез:
+5
+Alek A1+
+Dejan BSandra A+
+Trajce 0+
+Rebeka A1-
+Излез:
+A+ = 2
+B- = 1
+0+ = 1
+A- = 1
+
+
+
+import java.util.Scanner;
+
+class MapEntry<K extends Comparable<K>, E> {
+    // Each MapEntry object is a pair consisting of a key (a Comparable object)
+    // and a value (an arbitrary object).
+    K key;
+    E value;
+
+    public MapEntry(K key, E val) {
+        this.key = key;
+        this.value = val;
+    }
+
+    public String toString() {
+        return "<" + key + "," + value + ">";
+    }
+}
+
+
+
+class OBHT<K extends Comparable<K>, E> {
+
+    // An object of class OBHT is an open-bucket hash table, containing entries
+    // of class MapEntry.
+    private MapEntry<K, E>[] buckets;
+
+    // buckets[b] is null if bucket b has never been occupied.
+    // buckets[b] is former if bucket b is formerly-occupied
+    // by an entry that has since been deleted (and not yet replaced).
+
+    static final int NONE = -1; // ... distinct from any bucket index.
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static final MapEntry former = new MapEntry(null, null);
+    // This guarantees that, for any genuine entry e,
+    // e.key.equals(former.key) returns false.
+
+    private int occupancy = 0;
+    // ... number of occupied or formerly-occupied buckets in this OBHT.
+
+    @SuppressWarnings("unchecked")
+    public OBHT(int m) {
+        // Construct an empty OBHT with m buckets.
+        buckets = (MapEntry<K, E>[]) new MapEntry[m];
+    }
+
+
+    private int hash(K key) {
+        // Translate key to an index of the array buckets.
+        return Math.abs(key.hashCode()) % buckets.length;
+    }
+
+
+    public int search(K targetKey) {
+        // Find which if any bucket of this OBHT is occupied by an entry whose key
+        // is equal to targetKey. Return the index of that bucket.
+        int b = hash(targetKey);
+
+        for (int n_search = 0; n_search < buckets.length; n_search++) {
+            MapEntry<K, E> currEntry = buckets[b];
+            if (currEntry == null) return NONE;
+            else if (currEntry.key.equals(targetKey)) return b;
+            else b = (b + 1) % buckets.length;
+        }
+        return NONE;
+    }
+
+    public MapEntry<K, E> getBucket(int bucket) {
+        return buckets[bucket];
+    }
+
+
+    public void insert(K key, E val) {
+        // Insert the entry <key, val> into this OBHT.
+        MapEntry<K, E> newEntry = new MapEntry<K, E>(key, val);
+        int b = hash(key);
+        int n_search = 0;
+        Integer free_position = null;
+        Integer existing_position = null;
+        while (n_search < buckets.length) {
+            MapEntry<K, E> currEntry = buckets[b];
+            if (currEntry == null) {
+                if (free_position == null) free_position = b;
+                break;
+            } else if (key.equals(currEntry.key)) {
+                existing_position = b;
+                break;
+            } else {
+                if (currEntry == former && free_position == null) {
+                    free_position = b;
+                }
+                b = (b + 1) % buckets.length;
+                n_search++;
+            }
+        }
+        if (existing_position != null)
+            buckets[existing_position] = newEntry;
+        else if (free_position != null) {
+            buckets[free_position] = newEntry;
+            if (++occupancy == buckets.length) {
+                System.out.println("Hash tabelata e polna!!!");
+            }
+        } else {
+            // failed to insert, table was already full
+        }
+    }
+
+
+    @SuppressWarnings("unchecked")
+    public void delete(K key) {
+        // Delete the entry (if any) whose key is equal to key from this OBHT.
+        int b = hash(key);
+        int n_search = 0;
+        while (n_search < buckets.length) {
+            MapEntry<K, E> currEntry = buckets[b];
+            if (currEntry == null) return;
+            else if (currEntry.key.equals(key)) {
+                buckets[b] = former;
+                return;
+            } else {
+                b = (b + 1) % buckets.length;
+                n_search++;
+            }
+        }
+    }
+
+
+    public String toString() {
+        String temp = "";
+        for (int i = 0; i < buckets.length; i++) {
+            temp += i + ":";
+            if (buckets[i] == null)
+                temp += "\n";
+            else if (buckets[i] == former)
+                temp += "former\n";
+            else
+                temp += buckets[i] + "\n";
+        }
+        return temp;
+    }
+
+
+    public OBHT<K, E> clone() {
+        OBHT<K, E> copy = new OBHT<K, E>(buckets.length);
+        for (int i = 0; i < buckets.length; i++) {
+            MapEntry<K, E> e = buckets[i];
+            if (e != null && e != former)
+                copy.buckets[i] = new MapEntry<K, E>(e.key, e.value);
+            else
+                copy.buckets[i] = e;
+        }
+        return copy;
+    }
+}
+
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        OBHT<String, Integer> hashtable = new OBHT<String, Integer>(11);
+        int N = sc.nextInt();
+        for (int i = 1; i <= N; i++) {
+            String name = sc.next();
+            String key = sc.next().replaceAll("[1-2]", "");
+            int bucket = hashtable.search(key);
+            if (bucket == -1) hashtable.insert(key, 1);
+            else hashtable.insert(key, hashtable.getBucket(bucket).value + 1);
+        }
+        System.out.println(hashtable);
+    }
+}
+
+
+
+
 
 
