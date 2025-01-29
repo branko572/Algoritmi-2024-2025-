@@ -89,44 +89,44 @@ class DLL<E> {
 public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        DLL<Integer> list = new DLL<>();
 
         int N = sc.nextInt();
+
+        DLL<Integer> list = new DLL<>();
+
         for (int i = 0; i < N; i++) {
             list.insertLast(sc.nextInt());
         }
 
-        int totalSum = list.getSum();
-        int totalSize = list.getSize();
-        int count = 0;
+        int totalSum= list.getSum();
+        int totalSize= list.getSize();
+        int count=0;
 
-        DLLNode<Integer> current = list.getFirst();
-        int sumBefore = 0;
-        int sizeBefore = 0;
+        DLLNode<Integer> current =list.getFirst();
+
+        int sumBefore=0;
+        int sizeBefore=0;
 
         while (current != null) {
             int sumAfter = totalSum - sumBefore - current.element;
-            int sizeAfter = totalSize - sizeBefore - 1;
+            int sizeAfter = totalSize - sizeBefore - 1;  // Fixed
 
-            // Only check the condition if there are elements both before and after
             if (sizeBefore > 0 && sizeAfter > 0) {
-                double avgBefore = (double) sumBefore / sizeBefore;
-                double avgAfter = (double) sumAfter / sizeAfter;
+                double avgbefore = (double) sumBefore / sizeBefore;
+                double avgafter = (sizeAfter == 0) ? 0 : (double) sumAfter / sizeAfter;  // Prevent division by zero
 
-                if (avgBefore > avgAfter) {
+                if (avgbefore > avgafter) {
                     count++;
                 }
             }
 
-            // Update the sum and size for the "before" part
             sumBefore += current.element;
             sizeBefore++;
 
-            // Move to the next element
             current = current.succ;
         }
+    System.out.println(count);
 
-        System.out.println(count);
     }
 }
 
