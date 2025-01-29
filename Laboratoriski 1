@@ -574,6 +574,39 @@ public class Main {
     }
 }
 
+-------------------------------------------------------------------------------------
+
+
+public class Main {
+    public static void main(String[] args) {
+
+       Scanner sc = new Scanner(System.in);
+       int N = sc.nextInt();
+
+
+        SLL<String>list=new SLL<>();
+
+       for (int i = 0; i < N; i++) {
+           list.insertLast(sc.next());
+       }
+        int L = sc.nextInt();
+
+        System.out.println(list);
+
+       SLLNode<String>current=list.getFirst();
+
+
+       while (current!=null) {
+           if (current.element.length()==L) {
+               list.insertAfter("Target",current);
+               break;
+           }
+           current=current.succ;
+       }
+
+        System.out.println(list);
+    }
+}
 
 
 
