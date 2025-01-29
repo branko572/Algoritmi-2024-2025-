@@ -230,6 +230,54 @@ public class Main {
 }
 
 
+-------------------------------------------------------------------------------------------
+
+
+POLESNA VARIJACIJA:
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int N = sc.nextInt();
+
+        DLL<Integer> list = new DLL<>();
+        DLL<Integer> mirror = new DLL<>();
+
+        // Inserting elements into the list
+        for (int i = 0; i < N; i++) {
+            list.insertLast(sc.nextInt());
+        }
+
+        DLLNode<Integer> current = list.getFirst();
+
+        // Creating the mirrored list
+        while (current != null) {
+            mirror.insertFirst(current.element);
+            current = current.succ;
+        }
+
+        DLLNode<Integer> current2 = mirror.getFirst();
+        current = list.getFirst();  // Reset current to the original list
+
+        // Comparing the original list with the mirrored list
+        while (current2 != null && current != null) {
+            if (!current.element.equals(current2.element)) {
+                System.out.println("list isn't a palindrome");
+                return;
+            }
+            current = current.succ;
+            current2 = current2.succ;
+        }
+
+        // If the loop completes, it's a palindrome
+        System.out.println("list is a palindrome: " + list);
+    }
+}
+
+
+
 Задача 2.
 
 • Да се напише програма за произволна двојно
@@ -457,6 +505,43 @@ public class Main {
 
         // Print the modified list to verify results
         System.out.println(list);
+    }
+}
+
+
+
+
+-------------------------------------------------------------------------------------------
+
+DRUGA VARIJACIJA:
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int N = sc.nextInt();
+        int brojac = 0;
+        DLL<Integer> list = new DLL<>();
+
+        for (int i = 0; i < N; i++) {
+            list.insertLast(sc.nextInt());
+        }
+
+        DLLNode<Integer> current = list.getFirst();
+
+        while (current != null && current.succ != null) {
+            DLLNode<Integer> tmp = current.succ;
+            if (current.element.equals(tmp.element)) {
+                list.delete(tmp);  // Delete the duplicate node
+                brojac++;
+            } else {
+                current = tmp;  // Move to the next node if no deletion
+            }
+        }
+
+        System.out.println(list);  // Print the modified list
+        System.out.println(brojac);  // Print the count of deleted duplicates
     }
 }
 
