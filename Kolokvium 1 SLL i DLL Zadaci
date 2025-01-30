@@ -24,6 +24,78 @@ class Element {
     }
 }
 
+
+7.
+
+   public void setFirst(DLLNode<E> node) {
+        this.first = node;
+    }
+
+    public void setLast(DLLNode<E> node) {
+        this.last = node;
+    }
+
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        DLL<Integer> list = new DLL<>();
+
+        int N = sc.nextInt();
+
+        for (int i = 0; i < N; i++) {
+            list.insertLast(sc.nextInt());
+        }
+
+        int k = sc.nextInt();
+
+        System.out.println("Original List: " + list);
+
+        // Rotate the list k times to the right
+        rotateListRight(list, k);
+
+        System.out.println("Rotated List: " + list);
+    }
+
+    public static void rotateListRight(DLL<Integer> list, int k) {
+        int listSize = list.getSize();
+        if (listSize == 0 || k % listSize == 0) return;
+
+        k = k % listSize;  // Normalize k
+
+        // Make the list circular
+        list.getLast().succ = list.getFirst();
+        list.getFirst().pred = list.getLast();
+
+        // Find new tail (move (listSize - k) steps from head)
+        DLLNode<Integer> newTail = list.getFirst();
+        for (int i = 0; i < listSize - k - 1; i++) {
+            newTail = newTail.succ;
+        }
+
+        // Define new head
+        DLLNode<Integer> newHead = newTail.succ;
+
+        // Break the circular connection
+        newTail.succ = null;
+        newHead.pred = null;
+
+        // Update first and last pointers
+        list.setFirst(newHead);
+        list.setLast(newTail);
+    }
+
+
+}
+
+
+
+
+
+
+
 class SLLNode<E> {
     protected E element;
     protected SLLNode<E> succ;
