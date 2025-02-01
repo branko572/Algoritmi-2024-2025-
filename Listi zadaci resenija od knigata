@@ -233,6 +233,494 @@ import java.io.BufferedReader;
          }
  }
 
+Задача 3. Преуреди листа
+Дадена е еднострано поврзана листа 𝐿0 → 𝐿1 → . . . → 𝐿𝑛−1 → 𝐿𝑛. Преуредете
+ги jазлите во листата така што новата листа ´ке биде : 𝐿0 → 𝐿𝑛 → 𝐿1 → 𝐿𝑛−1 →
+𝐿2 → 𝐿𝑛−2...
+Влез: Во првата линиjа е даден броjот на елементи n. Во втората линиjа се
+даваат броевите во листата одделени со празно место.
+46
+
+Излез: На излез треба да се испечати преуредената листа
+Пример.
+Влез:
+5
+1 2 3 4 5
+Излез:
+1->5->2->4->3
+
+
+ SLLNode<E> reverselist(SLLNode<E> node) {
+ SLLNode<E> prev = null, curr = node, next;
+ while (curr != null) {
+ next = curr.succ;
+ curr.succ = prev;
+prev = curr;
+ curr = next;
+ }
+ node = prev;
+ return node;
+ }
+
+ void rearrange() {
+ //1) Наjди jа средината на листата
+ SLLNode<E> sredina = this.getFirst();
+ for(int i=1;i<this.size()/2;i++)
+ sredina = sredina.succ;
+ System.out.println(sredina.element);
+
+ //2) Подели jа листата на две половини
+ //node1, првиот jазел од првата половина 1 -> 2 -> 3
+ //node2, првиот jазел од втората половина 4 -> 5
+ SLLNode<E> node1 = this.getFirst();
+ SLLNode<E> node2 = sredina.succ;
+ sredina.succ = null;
+
+ //3) Преврти jа втората половина т.е. 5 -> 4
+
+ node2 = reverselist(node2);
+
+ //4) Наизменично споjуваj ги jазлите
+ SLLNode<E> node = new SLLNode<E>(null, null); //помошен jазoл
+ // curr е покажувачот на помошниот jазол
+ // од каде ´ке се формира новата листа
+ SLLNode<E> curr = node;
+ while (node1 != null || node2 != null) {
+
+ // Прво додаj jазол од првата листа
+ if (node1 != null) {
+ curr.succ = node1;
+ curr = curr.succ;
+ node1 = node1.succ;
+ }
+
+ // Па додаj jазол од втората листа
+ if (node2 != null) {
+curr.succ = node2;
+curr = curr.succ;
+ node2 = node2.succ;
+ }
+ }
+
+ // Отстрани го помошниот jазел
+ node = node.succ;
+ }
+
+ public static void main(String[] args) {
+ Scanner sc = new Scanner(System.in);
+ int n = sc.nextInt();
+ SLL<Integer> lista=new SLL<Integer>();
+
+ for(int i=0;i<n;i++)
+ {
+ int el=sc.nextInt();
+lista.insertLast(el);
+ }
+
+ lista.rearrange();
+
+
+ System.out.println(lista.toString()); }
+
+
+
+ Раздели min-max листа
+Дадена е еднострано поврзана листа чии што jазли содржат по еден природен
+броj. Во дадената листа треба да се пронаjдат елементите со наjмала и наjголема вредност и потоа листата треба да се подели на две резултантни еднострано
+поврзани листи, т.ш. во првата листа треба да се сместат сите jазли кои содржат
+броеви поблиски до наjмалиот елемент отколку до наjголемиот елемент, а во втората сите jазли кои содржат броеви поблиски до наjголемиот елемент отколку
+до наjмалиот. Доколку елементот е на исто растоjание од наjмалиот и наjголемиот елемент тогаш се сместува во листата на елементи поблиски до наjмалот
+елемент. Jазлите во резултантните листи се додаваат според редоследот по коj
+се поjавуваат во дадената листа. (Помош: броjот 3 е на растоjание 2 од броjот
+1 и на растоjание 4 од броjот 7. Следува дека броjот 3 е поблиску до броjот 1
+отколку до броjот 7).
+Влез: Во првата линиjа е даден броjот на елементи n. Во втората линиjа се
+даваат броевите во листата одделени со празно место.
+Излез: На излез во првиот ред треба да се испечатат jазлите по редослед на
+првата резултантната листа (коjа содржи елементи кои се поблиску до наjмалиот
+елемент). Во вториот ред треба да се испечатат jазлите на по редослед на втората резултантната листа (коjа содржи елементи кои се поблиску до наjголемиот
+елемент).
+Пример.
+Влез:
+9
+1 5 7 3 2 9 4 8 6
+Излез:
+1->5->3->2->4
+7->9->8->6
+
+
+import java.util.Scanner;
+
+class SLLNode<E> {
+    protected E element;
+    protected SLLNode<E> succ;
+
+    public SLLNode(E elem, SLLNode<E> succ) {
+        this.element = elem;
+        this.succ = succ;
+    }
+}
+
+class SLL<E> {
+    private SLLNode<E> first;
+
+    public SLL() {
+        this.first = null;
+    }
+
+    public void insertLast(E o) {
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            while (tmp.succ != null)
+                tmp = tmp.succ;
+            tmp.succ = new SLLNode<E>(o, null);
+        } else {
+            insertFirst(o);
+        }
+    }
+
+    public void insertFirst(E o) {
+        SLLNode<E> ins = new SLLNode<E>(o, first);
+        first = ins;
+    }
+
+    public SLLNode<E> getFirst() {
+        return first;
+    }
+
+    @Override
+    public String toString() {
+        String ret = new String();
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            ret += tmp.element;
+            while (tmp.succ != null) {
+                tmp = tmp.succ;
+                ret += "->" + tmp.element;
+            }
+        } else {
+            ret = "Prazna lista!!!";
+        }
+        return ret;
+    }
+}
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        SLL<Integer> list = new SLL<>();
+
+        for (int i = 0; i < n; i++) {
+            list.insertLast(sc.nextInt());
+        }
+
+
+        SLLNode<Integer> current = list.getFirst();
+
+        int min=current.element;
+        int max=current.element;
+
+        while (current!= null) {
+            if(current.element<min){
+                min=current.element;
+            }
+            if(current.element>max){
+                max=current.element;
+            }
+            current = current.succ;
+        }
+        SLL<Integer> closetoMin = new SLL<>();
+        SLL<Integer> closetoMax = new SLL<>();
+
+        current=list.getFirst();
+
+
+        while (current!=null) {
+            int distanaceMin=Math.abs(current.element-min);
+            int distanaceMax=Math.abs(current.element-max);
+
+            if(distanaceMin<=distanaceMax){
+                closetoMin.insertLast(current.element);
+            }
+            else {
+                closetoMax.insertFirst(current.element);
+            }
+            current = current.succ;
+        }
+
+
+        System.out.println(closetoMin);
+        System.out.println(closetoMax);
+
+
+    }
+}
+
+Бриши jазли од листа
+Дадена е еднострана поврзана листа со цели броеви. Ваша задача е да бришете
+jазли т.ш. прво ´ке оставите еден jазол, еден ´ке бришете, па ´ке оставите 2 jазли
+еден ´ке бришете, па ´ке оставите 3 jазли па еден ´ке бришете итн... Односно од вас
+49
+Податочни структури
+се бара да бришете преку 1, па преку 2, па преку 3 jазли итн... додека е возможно
+да се брише.
+Влез: Во првата линиjа е даден броjот на елементи n. Во втората линиjа се
+даваат броевите во листата одделени со празно место.
+Излез: Резултатната листа. Доколку листата е празна испечатете: Prazna
+lista
+Пример.
+Влез:
+9
+4 6 8 3 1 3 5 7 2
+Излез:
+4->8->3->3->5->7
+
+import java.util.Scanner;
+
+class SLLNode<E> {
+    protected E element;
+    protected SLLNode<E> succ;
+
+    public SLLNode(E elem, SLLNode<E> succ) {
+        this.element = elem;
+        this.succ = succ;
+    }
+}
+
+class SLL<E> {
+    private SLLNode<E> first;
+
+    public SLL() {
+        // Construct an empty SLL
+        this.first = null;
+    }
+
+    public void deleteList() {
+        first = null;
+    }
+
+    public int size() {
+        int listSize = 0;
+        SLLNode<E> tmp = first;
+        while(tmp != null) {
+            listSize++;
+            tmp = tmp.succ;
+        }
+        return listSize;
+    }
+
+    @Override
+    public String toString() {
+        String ret = new String();
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            ret += tmp.element;
+            while (tmp.succ != null) {
+                tmp = tmp.succ;
+                ret += "->" + tmp.element;
+            }
+        } else
+            ret = "Prazna lista!!!";
+        return ret;
+    }
+
+    public void insertFirst(E o) {
+        SLLNode<E> ins = new SLLNode<E>(o, null);
+        ins.succ = first;
+        //SLLNode<E> ins = new SLLNode<E>(o, first);
+        first = ins;
+    }
+
+    public void insertAfter(E o, SLLNode<E> node) {
+        if (node != null) {
+            SLLNode<E> ins = new SLLNode<E>(o, node.succ);
+            node.succ = ins;
+        } else {
+            System.out.println("Dadenot jazol e null");
+        }
+    }
+    public void insertBefore(E o, SLLNode<E> before) {
+
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            if(first==before){
+                this.insertFirst(o);
+                return;
+            }
+            //ako first!=before
+            while (tmp.succ != before && tmp.succ!=null)
+                tmp = tmp.succ;
+            if (tmp.succ == before) {
+                tmp.succ = new SLLNode<E>(o, before);;
+            } else {
+                System.out.println("Elementot ne postoi vo listata");
+            }
+        } else {
+            System.out.println("Listata e prazna");
+        }
+    }
+
+    public void insertLast(E o) {
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            while (tmp.succ != null)
+                tmp = tmp.succ;
+            tmp.succ = new SLLNode<E>(o, null);
+        } else {
+            insertFirst(o);
+        }
+    }
+
+    public E deleteFirst() {
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            first = first.succ;
+            return tmp.element;
+        } else {
+            System.out.println("Listata e prazna");
+            return null;
+        }
+    }
+
+    public E delete(SLLNode<E> node) {
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            if(first == node) {
+                return this.deleteFirst();
+            }
+            while (tmp.succ != node && tmp.succ.succ != null)
+                tmp = tmp.succ;
+            if (tmp.succ == node) {
+                tmp.succ = tmp.succ.succ;
+                return node.element;
+            } else {
+                System.out.println("Elementot ne postoi vo listata");
+                return null;
+            }
+        } else {
+            System.out.println("Listata e prazna");
+            return null;
+        }
+
+    }
+
+    public SLLNode<E> getFirst() {
+        return first;
+    }
+
+    public SLLNode<E> find(E o) {
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            while (!tmp.element.equals(o) && tmp.succ != null)
+                tmp = tmp.succ;
+            if (tmp.element.equals(o)) {
+                return tmp;
+            } else {
+                System.out.println("Elementot ne postoi vo listata");
+            }
+        } else {
+            System.out.println("Listata e prazna");
+        }
+        return null;
+    }
+
+    public void merge (SLL<E> in){
+        if (first != null) {
+            SLLNode<E> tmp = first;
+            while(tmp.succ != null)
+                tmp = tmp.succ;
+            tmp.succ = in.getFirst();
+        }
+        else{
+            first = in.getFirst();
+        }
+    }
+
+    public void deleteNode(SLLNode<E> prev, SLLNode<E> toDelete) {
+        if (toDelete == first) {
+            first = first.succ;
+        } else {
+            prev.succ = toDelete.succ;
+        }
+    }
+
+
+    public void mirror() {
+        if (first != null) {
+            //m=nextsucc, p=tmp,q=next
+            SLLNode<E> tmp = first;
+            SLLNode<E> newsucc = null;
+            SLLNode<E> next;
+
+            while(tmp != null){
+                next = tmp.succ;
+                tmp.succ = newsucc;
+                newsucc = tmp;
+                tmp = next;
+            }
+            first = newsucc;
+        }
+    }
+}
+
+
+public class Main {
+    public static void main(String[] args) {
+       Scanner sc = new Scanner(System.in);
+       int n = sc.nextInt();
+       SLL<Integer> list = new SLL<>();
+
+       for (int i = 0; i < n; i++) {
+           list.insertLast(sc.nextInt());
+       }
+
+
+       SLLNode<Integer> current = list.getFirst();
+       SLLNode<Integer> prev = null;
+       int count = 0;
+       int keep=1;
+
+       while (current != null) {
+           count++;
+           if(count == keep) {
+               count=0;
+               keep++;
+               if(current.succ != null) {
+                   list.deleteNode(current,current.succ);
+               }
+           }
+           prev = current;
+           current = current.succ;
+       }
+
+    System.out.println(list);
+    }
+}
+
+
+
+Наизменично спои листи
+Дадени се две еднострано поврзани листи чии што jазли содржат по еден природен броj. Треба да се споjат двете листи во една резултантна на тоj начин што
+наизменично прво ´ке се додаваат првите два jазли од првата листа во резултантната, па првите два од втората листа, па следните два од првата, па следните два
+од втората итн. Jазлите што ´ке останат треба да се додадат на краj во резултантната листа, прво оние што останале од првата листа, потоа оние што останале
+од втората листа.
+Влез: Во првата линиjа е даден броjот на елементи на првата листа, па втората линиjа се даваат броевите во листата одделени со празно место.Во третата
+линиjа броjот на елементи на втората листа, па четвртата линиjа се даваат броевите во листата одделени со празно место.
+Излез: На излез треба да се испечатат jазлите по редослед во резултантната
+споена листа.
+Пример.
+Влез:
+5
+5 7 9
+8
+1 1 4 5 6 8 9 4
+Излез:
+5->7->1->1->9->4->5->6->8->9->4
+
+
+
 
 
 
