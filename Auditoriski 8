@@ -1,0 +1,736 @@
+Задача 1
+• Да се напише метод за печатење на јазлите на
+едно дрво. Секој јазел треба да биде испечатен во еден ред, а пред да се испечати содржината на
+јазелот треба да се вметнат онолку празни места колку што е нивото на тој јазел.
+
+
+import java.util.*;
+
+class Treenode{
+    int value;
+    Treenode left;
+    Treenode right;
+
+    Treenode (int value){
+        this.value = value;
+        this.left = null;
+        this.right = null;
+    }
+}
+
+
+public class Main {
+
+    public static void printree(Treenode root, int level){
+        if(root == null){
+            return;
+        }
+        for (int i = 0; i < level; i++) {
+            System.out.print("  ");
+        }
+
+        // Печати ја вредноста на јазелот
+        System.out.println(root.value);
+
+        // Рекурзивно печати ги левото и десното поддрво
+        printree(root.left, level + 1);
+        printree(root.right, level + 1);
+    }
+
+    public static void main(String[] args) {
+    Scanner sc = new Scanner(System.in);
+    Treenode root = new Treenode(1);
+    root.left = new Treenode(2);
+    root.right = new Treenode(3);
+    root.left.left = new Treenode(4);
+    root.left.right = new Treenode(5);
+    root.right.left = new Treenode(6);
+    root.right.right = new Treenode(7);
+
+
+    printree(root, 0);
+    }
+}
+
+
+Задача 2
+• Да се напише метод за пресметување на степенот на едно дрво.
+
+
+import java.util.*;
+
+class TreeNode {
+    String value;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode(String value) {
+        this.value = value;
+        this.left = null;
+        this.right = null;
+    }
+}
+
+public class Main {
+    public static void printTree(TreeNode root) {
+        printTreeHelper(root, 0);
+    }
+
+    private static void printTreeHelper(TreeNode node, int level) {
+        if (node == null) {
+            return;
+        }
+
+        // Печати празни места според нивото на јазелот
+        for (int i = 0; i < level; i++) {
+            System.out.print("  ");
+        }
+
+        // Печати вредноста на јазелот
+        System.out.println(node.value);
+
+        // Рекурзивно печати ги левите и десните деца
+        printTreeHelper(node.left, level + 1);
+        printTreeHelper(node.right, level + 1);
+    }
+
+    public static int getTreeDegree(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+
+        // Број на деца на тековниот јазол
+        int childrenCount = 0;
+        if (root.left != null) childrenCount++;
+        if (root.right != null) childrenCount++;
+
+        // Рекурзивно пресметај го максималниот степен
+        int leftDegree = getTreeDegree(root.left);
+        int rightDegree = getTreeDegree(root.right);
+
+        return Math.max(childrenCount, Math.max(leftDegree, rightDegree));
+    }
+
+    public static void main(String[] args) {
+        // Пример за креирање на бинарно дрво
+        TreeNode root = new TreeNode("Root");
+        root.left = new TreeNode("Left Child");
+        root.right = new TreeNode("Right Child");
+        root.left.left = new TreeNode("Left Grandchild");
+        root.left.right = new TreeNode("Right Grandchild");
+        root.right.left = new TreeNode("Left Grandchild");
+        root.right.right = new TreeNode("Right Grandchild");
+
+        // Печатење на дрвото
+        printTree(root);
+
+        // Пресметување на степенот
+        int degree = getTreeDegree(root);
+        System.out.println("Степенот на дрвото е: " + degree);
+    }
+}
+
+Задача 3
+• Да се напише нерекурзивна функција за
+изминување на бинарно дрво во inorder. Аргумент во функцијата е покажувач кон коренот на дрвото.
+
+
+import java.util.*;
+
+class TreeNode {
+    int value;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode(int value) {
+        this.value = value;
+        this.left = null;
+        this.right = null;
+    }
+}
+
+public class Main {
+
+    public static void inorder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode cur = root;
+        while (cur != null || !stack.isEmpty()) {
+            while (cur != null) {
+                stack.push(cur);
+                cur = cur.left;
+            }
+            cur = stack.pop();
+            System.out.println(cur.value+" ");
+            cur = cur.right;
+        }
+
+    }
+
+
+    public static void main(String[] args) {
+       TreeNode root = new TreeNode(1);
+       root.left = new TreeNode(2);
+       root.right = new TreeNode(3);
+       root.left.left = new TreeNode(4);
+       root.left.right = new TreeNode(5);
+       root.right.left = new TreeNode(6);
+       root.right.right = new TreeNode(7);
+       inorder(root);
+    }
+}
+
+
+Задача 3. Надополнување• За дома:
+o Да се напише функција preorderNonRecursive за
+нерекурзивно изминување на бинарно дрво во
+preorder
+o Да се напише функција postorderNonRecursive за
+нерекурзивно изминување на бинарно дрво во
+preorder
+
+
+import java.util.*;
+
+class TreeNode {
+    int value;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode(int value) {
+        this.value = value;
+        this.left = null;
+        this.right = null;
+    }
+}
+
+public class Main {
+
+    public static void preorder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+
+        System.out.print(root.value + " ");
+        preorder(root.left);
+        preorder(root.right);
+
+    }
+
+public static void postorder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        postorder(root.left);
+        postorder(root.right);
+        System.out.print(root.value + " ");
+}
+
+    public static void inorder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode cur = root;
+        while (cur != null || !stack.isEmpty()) {
+            while (cur != null) {
+                stack.push(cur);
+                cur = cur.left;
+            }
+            cur = stack.pop();
+            System.out.println(cur.value+" ");
+            cur = cur.right;
+        }
+
+    }
+
+
+    public static void main(String[] args) {
+       TreeNode root = new TreeNode(1);
+       root.left = new TreeNode(2);
+       root.right = new TreeNode(3);
+       root.left.left = new TreeNode(4);
+       root.left.right = new TreeNode(5);
+       root.right.left = new TreeNode(6);
+       root.right.right = new TreeNode(7);
+       inorder(root);
+       preorder(root);
+       System.out.println();
+       postorder(root);
+    }
+}
+
+Задача 4
+• Да се напише функција што го дава бројот навнатрешни (нетерминални) јазли во даденобинарно дрво.
+
+import java.util.*;
+
+class TreeNode {
+    int value;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode(int value) {
+        this.value = value;
+        this.left = null;
+        this.right = null;
+    }
+}
+
+public class Main {
+
+    public static int internalcount(TreeNode root) {
+        if (root == null || (root.left == null && root.right == null)) {
+            return 0; // Return 0 if it's a null node or a leaf node
+        }
+
+        return 1 + internalcount(root.left) + internalcount(root.right);
+    }
+
+
+    public static void preorder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+
+        System.out.print(root.value + " ");
+        preorder(root.left);
+        preorder(root.right);
+
+    }
+
+public static void postorder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        postorder(root.left);
+        postorder(root.right);
+        System.out.print(root.value + " ");
+}
+
+    public static void inorder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode cur = root;
+        while (cur != null || !stack.isEmpty()) {
+            while (cur != null) {
+                stack.push(cur);
+                cur = cur.left;
+            }
+            cur = stack.pop();
+            System.out.println(cur.value+" ");
+            cur = cur.right;
+        }
+
+    }
+
+
+    public static void main(String[] args) {
+       TreeNode root = new TreeNode(1);
+       root.left = new TreeNode(2);
+       root.right = new TreeNode(3);
+       root.left.left = new TreeNode(4);
+       root.left.right = new TreeNode(5);
+       root.right.left = new TreeNode(6);
+       root.right.right = new TreeNode(7);
+        int counter=internalcount(root);
+       inorder(root);
+       preorder(root);
+       System.out.println();
+       postorder(root);
+       System.out.println();
+
+       System.out.println(counter);
+    }
+}
+
+
+
+Задача 5
+• Да се напише функција што го дава бројот на
+листови во дадено бинарно дрво.
+
+import java.util.*;
+
+class TreeNode {
+    int value;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode(int value) {
+        this.value = value;
+        this.left = null;
+        this.right = null;
+    }
+}
+
+public class Main {
+
+    public static int count(TreeNode root) {
+        if (root == null) return 0;
+        return 1 + count(root.left) + count(root.right);
+    }
+
+
+
+    public static int internalcount(TreeNode root) {
+        if (root == null || (root.left == null && root.right == null)) {
+            return 0; // Return 0 if it's a null node or a leaf node
+        }
+
+        return 1 + internalcount(root.left) + internalcount(root.right);
+    }
+
+
+    public static void preorder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+
+        System.out.print(root.value + " ");
+        preorder(root.left);
+        preorder(root.right);
+
+    }
+
+public static void postorder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        postorder(root.left);
+        postorder(root.right);
+        System.out.print(root.value + " ");
+}
+
+    public static void inorder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode cur = root;
+        while (cur != null || !stack.isEmpty()) {
+            while (cur != null) {
+                stack.push(cur);
+                cur = cur.left;
+            }
+            cur = stack.pop();
+            System.out.println(cur.value+" ");
+            cur = cur.right;
+        }
+
+    }
+
+
+    public static void main(String[] args) {
+       TreeNode root = new TreeNode(1);
+       root.left = new TreeNode(2);
+       root.right = new TreeNode(3);
+       root.left.left = new TreeNode(4);
+       root.left.right = new TreeNode(5);
+       root.right.left = new TreeNode(6);
+       root.right.right = new TreeNode(7);
+        int internalcount=internalcount(root);
+        int count=count(root);
+       inorder(root);
+       preorder(root);
+       System.out.println();
+       postorder(root);
+       System.out.println();
+
+       System.out.println(internalcount);
+       System.out.println(count);
+    }
+}
+
+
+Задача 6
+• Да се напише функција која за дадено бинарнодрво ќе ја врати неговата максимална длабочина(најдолгата патека во дрвото од коренот до некој лист).
+
+import java.util.*;
+
+class TreeNode {
+    int value;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode(int value) {
+        this.value = value;
+        this.left = null;
+        this.right = null;
+    }
+}
+
+public class Main {
+
+    public static int maxdepth(TreeNode root) {
+        if (root == null) return 0;
+        int leftdepth = maxdepth(root.left);
+        int rightdepth = maxdepth(root.right);
+       return Math.max(leftdepth, rightdepth) + 1;
+    }
+
+
+    public static int count(TreeNode root) {
+        if (root == null) return 0;
+        return 1 + count(root.left) + count(root.right);
+    }
+
+
+
+    public static int internalcount(TreeNode root) {
+        if (root == null || (root.left == null && root.right == null)) {
+            return 0; // Return 0 if it's a null node or a leaf node
+        }
+
+        return 1 + internalcount(root.left) + internalcount(root.right);
+    }
+
+
+    public static void preorder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+
+        System.out.print(root.value + " ");
+        preorder(root.left);
+        preorder(root.right);
+
+    }
+
+public static void postorder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        postorder(root.left);
+        postorder(root.right);
+        System.out.print(root.value + " ");
+}
+
+    public static void inorder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode cur = root;
+        while (cur != null || !stack.isEmpty()) {
+            while (cur != null) {
+                stack.push(cur);
+                cur = cur.left;
+            }
+            cur = stack.pop();
+            System.out.println(cur.value+" ");
+            cur = cur.right;
+        }
+
+    }
+
+
+    public static void main(String[] args) {
+       TreeNode root = new TreeNode(1);
+       root.left = new TreeNode(2);
+       root.right = new TreeNode(3);
+       root.left.left = new TreeNode(4);
+       root.left.right = new TreeNode(5);
+       root.right.left = new TreeNode(6);
+       root.left.left.left= new TreeNode(7);
+        int internalcount=internalcount(root);
+        int count=count(root);
+        int maxdepth=maxdepth(root);
+       inorder(root);
+       preorder(root);
+       System.out.println();
+       postorder(root);
+       System.out.println();
+
+       System.out.println(internalcount);
+       System.out.println(count);
+       System.out.println(maxdepth);
+    }
+}
+
+Задача 7
+• Да се напише функција која дадено бинарно дрвоќе го трансформира на тој начин што ќе ги замени улогите на левиот и десниот покажувач на секој
+јазел. Новодобиеното дрво да се пресликува
+симетрично во однос на оригиналното.
+
+
+import java.util.*;
+
+class TreeNode {
+    int value;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode(int value) {
+        this.value = value;
+        this.left = null;
+        this.right = null;
+    }
+}
+
+public class Main {
+
+    public static TreeNode mirrorTree(TreeNode root) {
+        if (root == null) return null;
+        TreeNode temp = root.left;
+        root.left = root.right;
+        root.right = temp;
+        mirrorTree(root.left);
+        mirrorTree(root.right);
+        return root;
+    }
+
+
+    public static void printtree(TreeNode root) {
+        if (root == null) return;
+        printtree(root.left);
+        System.out.print(root.value + " ");
+        printtree(root.right);
+    }
+
+
+    public static int maxdepth(TreeNode root) {
+        if (root == null) return 0;
+        int leftdepth = maxdepth(root.left);
+        int rightdepth = maxdepth(root.right);
+       return Math.max(leftdepth, rightdepth) + 1;
+    }
+
+
+    public static int count(TreeNode root) {
+        if (root == null) return 0;
+        return 1 + count(root.left) + count(root.right);
+    }
+
+
+
+    public static int internalcount(TreeNode root) {
+        if (root == null || (root.left == null && root.right == null)) {
+            return 0; // Return 0 if it's a null node or a leaf node
+        }
+
+        return 1 + internalcount(root.left) + internalcount(root.right);
+    }
+
+
+    public static void preorder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+
+        System.out.print(root.value + " ");
+        preorder(root.left);
+        preorder(root.right);
+
+    }
+
+public static void postorder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        postorder(root.left);
+        postorder(root.right);
+        System.out.print(root.value + " ");
+}
+
+    public static void inorder(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode cur = root;
+        while (cur != null || !stack.isEmpty()) {
+            while (cur != null) {
+                stack.push(cur);
+                cur = cur.left;
+            }
+            cur = stack.pop();
+            System.out.println(cur.value+" ");
+            cur = cur.right;
+        }
+
+    }
+
+
+    public static void main(String[] args) {
+       TreeNode root = new TreeNode(1);
+       root.left = new TreeNode(2);
+       root.right = new TreeNode(3);
+       root.left.left = new TreeNode(4);
+       root.left.right = new TreeNode(5);
+       root.right.left = new TreeNode(6);
+       root.left.left.left= new TreeNode(7);
+        int internalcount=internalcount(root);
+        int count=count(root);
+        int maxdepth=maxdepth(root);
+       inorder(root);
+       preorder(root);
+       System.out.println();
+       postorder(root);
+       System.out.println();
+
+       System.out.println(internalcount);
+       System.out.println(count);
+       System.out.println(maxdepth);
+
+       printtree(root);
+       System.out.println();
+        printtree(mirrorTree(root));
+
+    }
+}
+
+
+
+Задача 8Да се напише програма која ќе може да изгради Општо Дрво од N јазли кои содржат различни имиња при што на влез е дадено
+името на коренот, а потоа N-1 имиња на нов јазол и име на
+постоечки јазол кој што треба да биде родител на новиот јазол.
+N
+root
+parent_1 node_1
+parent_2 node_2
+…
+parent_N node_N
+Пример:
+
+Влез: 
+7
+Koren
+Koren Jazol1
+Koren Jazol2
+Jazol1 Jazol3
+Jazol3 Jazol4
+Jazol2 Jazol5
+Koren Jazol6 
+
+Излез:
+Koren
+Jazol6
+Jazol2
+Jazol5
+Jazol1
+Jazol3
+Jazol4
+
+
+ 
+
+
+
+
+
+
+
+
+
+
