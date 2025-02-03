@@ -723,7 +723,143 @@ Jazol3
 Jazol4
 
 
- 
+import java.util.*;
+
+class TreeNode {
+    String name;
+    List<TreeNode> children;
+
+    TreeNode(String name) {
+        this.name = name;
+        this.children = new LinkedList<>();
+    }
+
+    public void addChild(TreeNode child) {
+        this.children.add(child);
+    }
+
+    public void printtree(int level) {
+        for (int i = 0; i < level; i++) {
+            System.out.print(" ");
+        }
+        System.out.println(this.name);
+        for (TreeNode child : this.children) {
+            child.printtree(level + 1);
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int N = Integer.parseInt(sc.nextLine()); // Number of nodes
+        String rootName = sc.nextLine(); // Root node name
+        TreeNode root = new TreeNode(rootName);
+
+        Map<String, TreeNode> nodes = new HashMap<>();
+        nodes.put(rootName, root);
+
+        // Loop should run N-1 times because N includes the root
+        for (int i = 0; i < N - 1; i++) {
+            String[] input = sc.nextLine().split(" ");
+            String parentName = input[0];
+            String childName = input[1];
+
+            TreeNode childNode = new TreeNode(childName);
+            TreeNode parentNode = nodes.get(parentName);
+
+            if (parentNode != null) {
+                parentNode.addChild(childNode);
+            }
+
+            nodes.put(childName, childNode);
+        }
+
+        root.printtree(0);
+        sc.close();
+    }
+}
+
+
+
+Задача 9
+Да се напише програма која за дадено
+Бинарно Дрво и избран јазол од дрвото ќе ја врати патеката од коренот во дрвото до тој
+јазол.
+
+import java.util.*;
+
+
+class TreeNode{
+    int value;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode(int value){
+        this.value = value;
+        this.left = null;
+        this.right = null;
+    }
+}
+
+
+public class Main {
+
+    public static List<Integer> findPath(TreeNode root, int target) {
+        List<Integer> path = new ArrayList<>();
+        findPathHelper(root, target, path);
+        return path;
+
+    }
+
+
+    public static boolean findPathHelper(TreeNode root, int target, List<Integer> path) {
+        if (root == null) return false;
+
+        path.add(root.value);
+        if (root.value == target) {
+            return true;
+        }
+        if (findPathHelper(root.left, target, path)) {
+            return true;
+        }
+
+        if (findPathHelper(root.right, target, path)) {
+            return true;
+        }
+
+        path.remove(path.size() - 1);
+        return false;
+
+    }
+
+
+
+    public static void main(String[] args) {
+        TreeNode root = new TreeNode(1);
+        root.left = new TreeNode(2);
+        root.right = new TreeNode(3);
+        root.left.left = new TreeNode(4);
+        root.left.right = new TreeNode(5);
+        root.right.left = new TreeNode(6);
+        root.right.right = new TreeNode(7);
+
+
+        int target=6;
+        List<Integer> path = findPath(root,target);
+
+        if(!path.isEmpty()){
+            System.out.println(target+" "+path);
+        }
+        else {
+            System.out.println(target);
+        }
+    }
+}
+
+
+
 
 
 
