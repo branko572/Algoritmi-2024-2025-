@@ -1,0 +1,638 @@
+Во оваа задача ќе работите со два објекти „Вработени“ и „Проекти“.
+
+Еден вработен е дефиниран со 2 вредности: Име (String), Возраст (цел број).
+
+Еден проект е дефиниран со 2 вредности: Работно Време (цел број), Плата по час (цел број).
+
+За даден проект вкупната плата се пресметува како производ на работното време и платата по час.
+
+Вработените ќе добиваат понудени проекти, и треба да го изберат проектот од кој ќе добијат најголема плата (доколку имаат избор од повеќе проекти со иста најголема плата, тогаш првиот таков).
+
+Ваша задача ќе биде да им помогнете на вработените со тоа што ќе искористите CBHT со 10 кофички каде што за секој вработен ќе ја чувате неговата најдобра понуда.
+
+За хеш функција користете производ од возраста на вработениот и ASCII вредноста на првата буква од името на вработениот.
+
+Влез:
+Во првиот ред е даден еден цел број N кој го означува бројот на понуди. Потоа во следните N редови се дадени по 4 вредности, информациите за понудите, името и возраста на вработениот и работното време и платата од час на проектот соодветно:
+
+N
+name_1 age_1 time_1 rate_1
+name_2 age_2 time_2 rate_2
+...
+name_N age_N time_N rate_N
+Излез:
+
+Отпечатете ја целата табела (со готовиот toString метод).
+
+Секој вработен да се печати во формат "<name, age>" каде на местото на name и age треба да стои името и возраста на вработениот соодветно (имплементирајте го ова во toString метод)
+
+Секој проект да се печати во формат "<time, rate>" каде на местото на time и rate треба да стои работното време и платата по час на проектот соодветно (имплементирајте го ова во toString метод)
+
+
+
+
+For example:
+
+Input	Result
+5  
+Martin 25 3 100  
+Jana 26 4 90  
+Martin 25 5 120  
+Jana 26 2 95  
+Nenad 20 6 80 
+0:<<Nenad, 20>,<6, 80>>
+1:
+2:
+3:
+4:<<Jana, 26>,<4, 90>>
+5:<<Martin, 25>,<5, 120>>
+6:
+7:
+8:
+9:
+1  
+Toni 45 10 500  
+Toni 42 30 600
+Ana 20 10 300
+Jana 20 15 350
+0:<<Toni, 45>,<10, 500>>
+1:
+2:
+3:
+4:
+5:
+6:
+7:
+8:
+9:
+
+
+
+
+
+import java.util.Scanner;
+import java.util.Objects; // Import Objects for null-safe comparison
+
+// Овде креирајте ги помошните класи за клуч и вредност
+// Исполнете ги барањата од текстот за toString методите
+// Дополнително осигурете се дека вашата клуч класа ќе ги имплементира потребните
+// hashCode и equals методи
+
+class Person {
+    String name;
+    int age;
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public int hashCode() {
+        return (name != null && !name.isEmpty()) ? age * name.charAt(0) : 0;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Person person = (Person) obj;
+        return age == person.age && Objects.equals(name, person.name);
+    }
+
+    @Override
+    public String toString() {
+        return "<" + name + ", " + age + ">";
+    }
+}
+
+class Project {
+    int time;
+    int rate;
+
+    public Project(int time, int rate) {
+        this.time = time;
+        this.rate = rate;
+    }
+
+    public int getTotalPay() {
+        return time * rate;
+    }
+
+    @Override
+    public String toString() {
+        return "<" + time + ", " + rate + ">";
+    }
+}
+
+public class Solution {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int N = scanner.nextInt();
+        
+        CBHT<Person, Project> table = new CBHT<>(10);
+
+        for (int i = 0; i < N; i++) {
+            
+            String name = scanner.next();
+            int age = scanner.nextInt();
+            int time = scanner.nextInt();
+            int rate = scanner.nextInt();
+
+            Person person = new Person(name, age);
+            Project project = new Project(time, rate);
+
+            SLLNode<MapEntry<Person, Project>> node = table.search(person);
+            
+            if (node == null) {
+                table.insert(person, project);
+            } else {
+                Project existingProject = node.element.value; // Access the value from the MapEntry
+                if (existingProject.getTotalPay() < project.getTotalPay()) {
+                    table.insert(person, project); // Replace with the better project
+                }
+            }
+        }
+
+        // Print the resulting hash table
+        System.out.println(table);
+    }
+}
+
+
+----------------------------------------------------------------------------------------------------------
+
+FIXED?????
+
+
+import java.util.Scanner;
+import java.util.Objects;
+
+class Person {
+    String name;
+    int age;
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public int hashCode() {
+        return (name != null && !name.isEmpty()) ? age * name.charAt(0) : 0;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Person person = (Person) obj;
+        return age == person.age && Objects.equals(name, person.name);
+    }
+
+    @Override
+    public String toString() {
+        return "<" + name + ", " + age + ">";
+    }
+}
+
+class Project {
+    int time;
+    int rate;
+
+    public Project(int time, int rate) {
+        this.time = time;
+        this.rate = rate;
+    }
+
+    public int getTotalPay() {
+        return time * rate;
+    }
+
+    @Override
+    public String toString() {
+        return "<" + time + ", " + rate + ">";
+    }
+}
+
+public class Solution {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int N = scanner.nextInt();
+
+        CBHT<Person, Project> table = new CBHT<>(10);
+
+        for (int i = 0; i < N; i++) {
+            String name = scanner.next();
+            int age = scanner.nextInt();
+            int time = scanner.nextInt();
+            int rate = scanner.nextInt();
+
+            Person person = new Person(name, age);
+            Project project = new Project(time, rate);
+
+            SLLNode<MapEntry<Person, Project>> node = table.search(person);
+
+            if (node == null) {
+                table.insert(person, project);
+            } else {
+                Project existingProject = node.element.value;
+                if (existingProject.getTotalPay() < project.getTotalPay()) {
+                    table.insert(person, project);
+                }
+            }
+        }
+
+        // Печатење на хеш-табелата
+        System.out.println(table);
+    }
+}
+
+
+
+---------------------------------------------------------------------------------------------
+
+TOCNA VO INTELLIJ:
+
+import java.util.*;
+
+
+class MapEntry<K extends Comparable<K>, E> {
+    // Each MapEntry object is a pair consisting of a key (a Comparable object)
+    // and a value (an arbitrary object).
+    K key;
+    E value;
+
+    public MapEntry(K key, E val) {
+        this.key = key;
+        this.value = val;
+    }
+
+    public String toString() {
+        return "<" + key + "," + value + ">";
+    }
+}
+
+class SLLNode<E> {
+    protected E element;
+    protected SLLNode<E> succ;
+
+    public SLLNode(E elem, SLLNode<E> succ) {
+        this.element = elem;
+        this.succ = succ;
+    }
+
+    @Override
+    public String toString() {
+        return element.toString();
+    }
+}
+
+
+
+
+class CBHT<K extends Comparable<K>, E> {
+
+    // An object of class CBHT is a closed-bucket hash table, containing
+    // entries of class MapEntry.
+    private SLLNode<MapEntry<K, E>>[] buckets;
+
+    @SuppressWarnings("unchecked")
+    public CBHT(int m) {
+        // Construct an empty CBHT with m buckets.
+        buckets = (SLLNode<MapEntry<K, E>>[]) new SLLNode[m];
+    }
+
+    private int hash(K key) {
+        // Translate key to an index of the array buckets.
+        return Math.abs(key.hashCode()) % buckets.length;
+    }
+
+    public SLLNode<MapEntry<K, E>> search(K targetKey) {
+        // Find which if any node of this CBHT contains an entry whose key is equal to targetKey.
+        // Return a link to that node (or null if there is none).
+        int b = hash(targetKey);
+        SLLNode<MapEntry<K, E>> currNode = buckets[b];
+        while (currNode != null) {
+            MapEntry<K, E> currEntry = currNode.element;
+            if (currEntry.key.equals(targetKey)) return currNode;
+            else currNode = currNode.succ;
+        }
+        return null;
+    }
+
+    public void insert(K key, E val) {
+        // Insert the entry <key, val> into this CBHT.
+        // If entry with same key exists, overwrite it.
+        MapEntry<K, E> newEntry = new MapEntry<>(key, val);
+        int b = hash(key);
+        SLLNode<MapEntry<K, E>> currNode = buckets[b];
+        while (currNode != null) {
+            MapEntry<K, E> currEntry = currNode.element;
+            if (currEntry.key.equals(key)) {
+                // Make newEntry replace the existing entry ...
+                currNode.element = newEntry;
+                return;
+            } else currNode = currNode.succ;
+        }
+        // Insert newEntry at the front of the SLL in bucket b ...
+        buckets[b] = new SLLNode<>(newEntry, buckets[b]);
+    }
+
+    public void delete(K key) {
+        // Delete the entry (if any) whose key is equal to key from this CBHT.
+        int b = hash(key);
+        SLLNode<MapEntry<K, E>> predNode = null, currNode = buckets[b];
+        while (currNode != null) {
+            MapEntry<K, E> currEntry = currNode.element;
+            if (currEntry.key.equals(key)) {
+                if (predNode == null) buckets[b] = currNode.succ;
+                else predNode.succ = currNode.succ;
+                return;
+            } else {
+                predNode = currNode;
+                currNode = currNode.succ;
+            }
+        }
+    }
+
+    public String toString() {
+        String temp = "";
+        for (int i = 0; i < buckets.length; i++) {
+            temp += i + ":";
+            SLLNode<MapEntry<K, E>> curr = buckets[i];
+            while (curr != null) {
+                temp += curr.element.toString() + " ";
+                curr = curr.succ;
+            }
+            temp += "\n";
+        }
+        return temp;
+    }
+}
+
+class OBHT<K extends Comparable<K>, E> {
+
+    // An object of class OBHT is an open-bucket hash table, containing entries
+    // of class MapEntry.
+    private MapEntry<K, E>[] buckets;
+
+    // buckets[b] is null if bucket b has never been occupied.
+    // buckets[b] is former if bucket b is formerly-occupied
+    // by an entry that has since been deleted (and not yet replaced).
+
+    static final int NONE = -1; // ... distinct from any bucket index.
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static final MapEntry former = new MapEntry(null, null);
+    // This guarantees that, for any genuine entry e,
+    // e.key.equals(former.key) returns false.
+
+    private int occupancy = 0;
+    // ... number of occupied or formerly-occupied buckets in this OBHT.
+
+    @SuppressWarnings("unchecked")
+    public OBHT(int m) {
+        // Construct an empty OBHT with m buckets.
+        buckets = (MapEntry<K, E>[]) new MapEntry[m];
+    }
+
+
+    private int hash(K key) {
+        // Translate key to an index of the array buckets.
+        return Math.abs(key.hashCode()) % buckets.length;
+    }
+
+
+    public int search(K targetKey) {
+        // Find which if any bucket of this OBHT is occupied by an entry whose key
+        // is equal to targetKey. Return the index of that bucket.
+        int b = hash(targetKey);
+
+        for (int n_search = 0; n_search < buckets.length; n_search++) {
+            MapEntry<K, E> currEntry = buckets[b];
+            if (currEntry == null) return NONE;
+            else if (currEntry.key.equals(targetKey)) return b;
+            else b = (b + 1) % buckets.length;
+        }
+        return NONE;
+    }
+
+    public MapEntry<K, E> getBucket(int bucket) {
+        return buckets[bucket];
+    }
+
+
+    public void insert(K key, E val) {
+        // Insert the entry <key, val> into this OBHT.
+        MapEntry<K, E> newEntry = new MapEntry<K, E>(key, val);
+        int b = hash(key);
+        int n_search = 0;
+        Integer free_position = null;
+        Integer existing_position = null;
+        while (n_search < buckets.length) {
+            MapEntry<K, E> currEntry = buckets[b];
+            if (currEntry == null) {
+                if (free_position == null) free_position = b;
+                break;
+            } else if (key.equals(currEntry.key)) {
+                existing_position = b;
+                break;
+            } else {
+                if (currEntry == former && free_position == null) {
+                    free_position = b;
+                }
+                b = (b + 1) % buckets.length;
+                n_search++;
+            }
+        }
+        if (existing_position != null)
+            buckets[existing_position] = newEntry;
+        else if (free_position != null) {
+            buckets[free_position] = newEntry;
+            if (++occupancy == buckets.length) {
+                System.out.println("Hash tabelata e polna!!!");
+            }
+        } else {
+            // failed to insert, table was already full
+        }
+    }
+
+
+    @SuppressWarnings("unchecked")
+    public void delete(K key) {
+        // Delete the entry (if any) whose key is equal to key from this OBHT.
+        int b = hash(key);
+        int n_search = 0;
+        while (n_search < buckets.length) {
+            MapEntry<K, E> currEntry = buckets[b];
+            if (currEntry == null) return;
+            else if (currEntry.key.equals(key)) {
+                buckets[b] = former;
+                return;
+            } else {
+                b = (b + 1) % buckets.length;
+                n_search++;
+            }
+        }
+    }
+
+
+    public String toString() {
+        String temp = "";
+        for (int i = 0; i < buckets.length; i++) {
+            temp += i + ":";
+            if (buckets[i] == null)
+                temp += "\n";
+            else if (buckets[i] == former)
+                temp += "former\n";
+            else
+                temp += buckets[i] + "\n";
+        }
+        return temp;
+    }
+
+
+    public OBHT<K, E> clone() {
+        OBHT<K, E> copy = new OBHT<K, E>(buckets.length);
+        for (int i = 0; i < buckets.length; i++) {
+            MapEntry<K, E> e = buckets[i];
+            if (e != null && e != former)
+                copy.buckets[i] = new MapEntry<K, E>(e.key, e.value);
+            else
+                copy.buckets[i] = e;
+        }
+        return copy;
+    }
+}
+
+
+
+class Person implements Comparable<Person> {
+    String name;
+    int age;
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public int compareTo(Person other) {
+        // For comparison, you can decide how to compare two Person objects.
+        // Here, we'll first compare by age, and if they're equal, by name.
+        int ageComparison = Integer.compare(this.age, other.age);
+        if (ageComparison != 0) {
+            return ageComparison;
+        } else {
+            return this.name.compareTo(other.name); // Compare by name if ages are equal
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return (name != null && !name.isEmpty()) ? age * name.charAt(0) : 0;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Person person = (Person) obj;
+        return age == person.age && Objects.equals(name, person.name);
+    }
+
+    @Override
+    public String toString() {
+        return "<" + name + ", " + age + ">";
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+}
+
+
+class Project{
+    int time;
+    int pay;
+
+    public Project(int time, int pay) {
+        this.time = time;
+        this.pay = pay;
+    }
+
+    public int getTime() {
+        return time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
+    }
+
+    public int getPay() {
+        return pay;
+    }
+
+    public void setPay(int pay) {
+        this.pay = pay;
+    }
+    @Override
+    public String toString() {
+        return "<" + time + ", " + pay + ">";
+    }
+    public int getTotalPay() {
+        return time * pay;
+    }
+}
+
+
+
+public class Main {
+    public static void main(String[] args){
+        Scanner sc = new Scanner(System.in);
+        int N=sc.nextInt();
+        CBHT<Person, Project> table = new CBHT<>(10);
+
+        for (int i = 0; i < N; i++) {
+            String name =sc.next();
+            int age =sc.nextInt();
+            int time =sc.nextInt();
+            int pay =sc.nextInt();
+            Person person = new Person(name, age);
+            Project project = new Project(time, pay);
+
+            SLLNode<MapEntry<Person, Project>> node =table.search(person);
+
+
+            if(node==null){
+                table.insert(person, project);
+            }else{
+                Project existingProject=node.element.value;
+                if(existingProject.getTotalPay()<project.getTotalPay()){
+                    table.insert(person, project);
+                }
+            }
+        }
+        System.out.println(table);
+
+    }
+}
+
+
+2.
+
+
+
