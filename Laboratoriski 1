@@ -608,6 +608,31 @@ public class Main {
     }
 }
 
+-------------------------------------------------------------
+
+
+public class Main {
+    public static void main(String[] args) {
+     Scanner sc=new Scanner(System.in);
+     int N=sc.nextInt();
+     SLL<String>list=new SLL<>();
+     for (int i=0;i<N;i++){
+        list.insertLast(sc.next());
+     }
+     int L=sc.nextInt();
+        SLLNode<String>curr=list.getFirst();
+        while (curr != null) {
+            if (curr.element.length() == L) {
+                list.insertAfter("Target", curr);
+                curr = curr.succ.succ; // skip the inserted "Target" node
+            } else {
+                curr = curr.succ;
+            }
+        }
+        System.out.println(list);
+    }
+}
+
 
 
 
