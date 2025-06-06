@@ -455,3 +455,54 @@ public class Main {
     }
 }
 
+------------------------------------------------------------------------------------------------------
+polesna varijanta:
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Read list
+        int N = sc.nextInt();
+        DLL<Integer> dll = new DLL<>();
+        for (int i = 0; i < N; i++) {
+            dll.insertLast(sc.nextInt());
+        }
+
+        // Read M and K
+        int M = sc.nextInt();
+        int K = sc.nextInt();
+
+        // Print the original list
+        System.out.println(dll);
+
+        // Find the node containing M
+        DLLNode<Integer> nodeM = dll.find(M);
+
+        // If M does not exist in the list
+        if (nodeM == null) {
+            System.out.println("Elementot ne postoi vo listata");
+            System.out.println(dll);
+            return;
+        }
+
+        // Move M exactly K steps to the left, wrapping around if needed
+        DLLNode<Integer> targetPosition = nodeM;
+        for (int i = 0; i < K; i++) {
+            if (targetPosition.pred != null) {
+                targetPosition = targetPosition.pred;
+            } else {
+                targetPosition = dll.getLast();
+            }
+
+        }
+
+        // Remove M from its current position and reinsert it at the target position
+        dll.delete(nodeM);
+        dll.insertBefore(M, targetPosition);
+
+        // Print the modified list
+        System.out.println(dll);
+    }
+}
+
