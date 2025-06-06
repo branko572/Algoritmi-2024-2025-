@@ -508,8 +508,38 @@ public class Main {
     }
 }
 
+-------------------------------------------------------------------------------------------
 
+public class Main {
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int N= sc.nextInt();
+        DLL<Integer>list=new DLL<>();
+        for(int i=0;i<N;i++){
+            list.insertLast(sc.nextInt());
+        }
+        DLLNode<Integer> curr = list.getFirst();
+      while(curr!=null) {
+          boolean duplicate=false;
+          DLLNode<Integer> check = curr.succ;
 
+          while(check!=null) {
+              DLLNode<Integer> nextcheck = check.succ;
+              if(check.element.equals(curr.element)) {
+                  list.delete(check);
+                  duplicate=true;
+              }
+              check = nextcheck;
+          }
+          DLLNode<Integer> nextcurr = curr.succ;
+          if(duplicate) {
+              list.delete(curr);
+          }
+          curr = nextcurr;
+      }
+        System.out.println(list);
+    }
+}
 
 -------------------------------------------------------------------------------------------
 
