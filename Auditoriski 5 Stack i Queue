@@ -235,3 +235,118 @@ public class Main {
 • ЗА ДОМА. Да се напише алгоритам кој ќе врши евалуација
 на израз во постфикс нотација.
 • Пр. 5 9 + 2 * 6 5 * + изразот е во постфикс нотација 
+
+
+
+
+
+import java.util.*;
+
+interface Stack<E> {
+    public boolean isEmpty();
+    public E peek();
+    public void clear();
+    public void push(E x);
+    public E pop();
+}
+
+class ArrayStack<E> implements Stack<E> {
+    private E[] elems;
+    private int depth;
+
+    @SuppressWarnings("unchecked")
+    public ArrayStack(int maxDepth) {
+        elems = (E[]) new Object[maxDepth];
+        depth = 0;
+    }
+
+    public boolean isEmpty() {
+        return (depth == 0);
+    }
+
+    public E peek() {
+        if (depth == 0)
+            throw new NoSuchElementException();
+        return elems[depth - 1];
+    }
+
+    public void clear() {
+        for (int i = 0; i < depth; i++) elems[i] = null;
+        depth = 0;
+    }
+
+    public void push(E x) {
+        elems[depth++] = x;
+    }
+
+    public int size() {
+        return depth;
+    }
+
+    public E pop() {
+        if (depth == 0)
+            throw new NoSuchElementException();
+        E topmost = elems[--depth];
+        elems[depth] = null;
+        return topmost;
+    }
+}
+
+public class Main {
+
+    public static int resultPostfix(char[] a){
+        ArrayStack<Integer>stack=new ArrayStack<>(100);
+        int number=0;
+        for(int i=0;i<a.length;i++){
+            if(Character.isDigit(a[i]) && Character.isDigit(a[i+1])){
+            number=number*10+Character.getNumericValue(a[i]);
+            }
+            if(Character.isDigit(a[i]) && !Character.isDigit(a[i+1])){
+                number=number*10+Character.getNumericValue(a[i]);
+                stack.push(number);
+                number=0;
+            }
+
+            if(a[i]=='+' || a[i]=='-' || a[i]=='*' || a[i]=='/'){
+                int num1=stack.pop();
+                int num2=stack.pop();
+
+                if(a[i]=='+'){
+                    stack.push(num1+num2);
+                }
+                else if(a[i]=='-'){
+                    stack.push(num1-num2);
+                }
+                else if(a[i]=='*'){
+                    stack.push(num1*num2);
+                }
+                else if(a[i]=='/'){
+                    stack.push(num1/num2);
+                }
+            }
+        }
+        return stack.pop();
+    }
+
+
+
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s1= sc.nextLine();
+        char[] c= s1.toCharArray();
+        int result =Main.resultPostfix(c);
+        System.out.println(result);
+    }
+}
+
+
+
+Задача 3.
+• Студентската служба на факултет работи со студенти од
+09:00 до 12:00. Ако знаеме за секој студент од редицата
+колку време е потребно за студентската служба да го
+опслужи, да се одреди кој студент ќе биде првиот студент
+кој нема да биде опслужен и колку студенти што чекале во
+редицата за тој ден не се опслужени.
+
