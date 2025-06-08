@@ -1,3 +1,128 @@
+DOUBLE ARRAY STACK ZADACA KAKO BI IZGLEDALA
+
+
+import java.util.*;
+
+class DoubleArrayStack<E> {
+
+    private E[] elems;
+    private int top1;
+    private int top2;
+
+    @SuppressWarnings("unchecked")
+    public DoubleArrayStack(int maxDepth) {
+        elems = (E[]) new Object[maxDepth];
+        top1 = -1;
+        top2 = maxDepth;
+    }
+
+    public boolean isFull() {
+        return (top1 + 1 == top2);
+    }
+
+    public boolean isEmptyFirst() {
+        return top1 == -1;
+    }
+
+    public boolean isEmptySecond() {
+        return top2 == elems.length;
+    }
+
+    public void clearFirst() {
+        while (!isEmptyFirst()) {
+            elems[top1--] = null;
+        }
+    }
+
+    public void clearSecond() {
+        while (!isEmptySecond()) {
+            elems[top2++] = null;
+        }
+    }
+
+    public E peekFirst() {
+        if (isEmptyFirst())
+            return null;
+        return elems[top1];
+    }
+
+    public E peekSecond() {
+        if (isEmptySecond())
+            return null;
+        return elems[top2];
+    }
+
+    public void pushFirst(E x) {
+        if (isFull()) {
+            throw new RuntimeException("Stack Overflow");
+        }
+        elems[++top1] = x;
+    }
+
+    public void pushSecond(E x) {
+        if (isFull()) {
+            throw new RuntimeException("Stack Overflow");
+        }
+        elems[--top2] = x;
+    }
+
+    public E popFirst() {
+        if (isEmptyFirst())
+            return null;
+        E topmost = elems[top1];
+        elems[top1--] = null;
+        return topmost;
+    }
+
+    public E popSecond() {
+        if (isEmptySecond())
+            return null;
+        E topmost = elems[top2];
+        elems[top2++] = null;
+        return topmost;
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.toString(elems);
+    }
+}
+public class Main {
+    public static void main(String[] args) {
+        DoubleArrayStack<Integer> stack = new DoubleArrayStack<>(10);
+
+        // Push to both stacks
+        stack.pushFirst(1);
+        stack.pushFirst(2);
+        stack.pushFirst(3);
+
+        stack.pushSecond(99);
+        stack.pushSecond(98);
+        stack.pushSecond(97);
+
+        // Show full array state
+        System.out.println("Stack contents: " + stack);
+
+        // Peek
+        System.out.println("Top of First Stack: " + stack.peekFirst());  // 3
+        System.out.println("Top of Second Stack: " + stack.peekSecond()); // 97
+
+        // Pop
+        System.out.println("Pop from First Stack: " + stack.popFirst()); // 3
+        System.out.println("Pop from Second Stack: " + stack.popSecond()); // 97
+
+        // Show state after pop
+        System.out.println("After pop - Stack contents: " + stack);
+
+        // Clear both
+        stack.clearFirst();
+        stack.clearSecond();
+        System.out.println("After clear - Stack contents: " + stack);
+    }
+}
+
+
+
 Задача 1.
 • Да се провери коректноста на заградите во еден израз.
 • Еден израз има коректни загради ако:
