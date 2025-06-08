@@ -1,0 +1,112 @@
+Задача 1.
+• Да се провери коректноста на заградите во еден израз.
+• Еден израз има коректни загради ако:
+– За секоја лева заграда, подоцна следува соодветна десна заграда
+– За секоја десна заграда претходно постои лева заграда
+– Секој под-израз меѓу пар од две загради содржи коректен број на
+загради
+• Примери на изрази со коректни и некоректни загради:
+s  (s – a)  (s – b)  (s – c)
+(– b + [b
+2 – 4ac]) / 2a
+s  (s – a)  (s – b  (s – c)
+s  (s – a)  s – b)  (s – c)
+(– b + [b
+2 – 4ac)] / 2
+
+
+import java.util.*;
+
+interface Stack<E> {
+    public boolean isEmpty();
+    public E peek();
+    public void clear();
+    public void push(E x);
+    public E pop();
+}
+
+class ArrayStack<E> implements Stack<E> {
+    private E[] elems;
+    private int depth;
+
+    @SuppressWarnings("unchecked")
+    public ArrayStack(int maxDepth) {
+        elems = (E[]) new Object[maxDepth];
+        depth = 0;
+    }
+
+    public boolean isEmpty() {
+        return (depth == 0);
+    }
+
+    public E peek() {
+        if (depth == 0)
+            throw new NoSuchElementException();
+        return elems[depth - 1];
+    }
+
+    public void clear() {
+        for (int i = 0; i < depth; i++) elems[i] = null;
+        depth = 0;
+    }
+
+    public void push(E x) {
+        elems[depth++] = x;
+    }
+
+    public int size() {
+        return depth;
+    }
+
+    public E pop() {
+        if (depth == 0)
+            throw new NoSuchElementException();
+        E topmost = elems[--depth];
+        elems[depth] = null;
+        return topmost;
+    }
+}
+
+public class Main {
+
+    public static boolean matching(char left, char right) {
+        return (left == '(' && right == ')') ||
+                (left == '[' && right == ']') ||
+                (left == '{' && right == '}');
+    }
+
+    public static boolean isCorrect(String expression) {
+        ArrayStack<Character> brackets = new ArrayStack<>(expression.length());
+
+        for (int i = 0; i < expression.length(); i++) {
+            char ch = expression.charAt(i);
+
+            if (ch == '(' || ch == '{' || ch == '[') {
+                brackets.push(ch);
+            } else if (ch == ')' || ch == '}' || ch == ']') {
+                if (brackets.isEmpty()) {
+                    return false;
+                }
+                char leftBracket = brackets.pop();
+                if (!matching(leftBracket, ch)) {
+                    return false;
+                }
+            }
+        }
+
+        return brackets.isEmpty();
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String expression = scanner.nextLine();
+        System.out.println(isCorrect(expression));
+    }
+}
+
+
+
+Задача 2.
+• ЗА ДОМА. Да се напише алгоритам кој ќе врши евалуација
+на израз во постфикс нотација.
+• Пр. 5 9 + 2 * 6 5 * + изразот е во постфикс нотација 
