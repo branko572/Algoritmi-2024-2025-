@@ -91,3 +91,133 @@ public class Main {
 }
 
 
+Напредни проблеми со редица
+Задача 1. Колоквиум
+Се организира прв колоквиум по предметот Алгоритми и структури на податоци.
+За таа цел се отвара анкета по предметот на коjа студентите се приjавуваат.
+Анкетата има дадено 2 избори:
+1) Полагам во било коj термин
+2) Испитот ми се преклопува со Математика
+Студентите се поставуваат во термините според редоследите во кои се примени (почнуваj´ки од првиот). Сите студенти сакаат да полагаат колку е можно
+порано па затоа дел од студентите мамат и во анкетата наведуваат дека истиот
+ден полагаат и Математика. Асистентите бараат список на студенти кои полагаат Математика и добиваат. Потоа се започнува со распределба на студентите
+во термини: прво во термините се доделуваат студентите кои се приjавиле дека
+полагаат и Математика (по редоследот по коj се приjавиле), ме´гутоа секоj од
+овие студенти се проверува дали навистина полага и Математика и ако мамел
+се сместува на краj од списокот на студенти кои избрале дека полагаат било коj
+термин. Потоа се изминуваат останатите студенти и се доделуваат во термини.
+Влез: Во влезот е даден прво капацитетот на студенти по термин (т.е. по колку студенти во еден термин може да полагаат). Следно се дава броjот и списокот
+на студенти кои истиот ден полагаат и Математика (според редоследот по коj
+се приjавиле). Потоа се дава броjот и списокот на останатите студенти (според
+редоследот по коj се приjавиле). На краj се дава броj и список на студенти кои
+навистина полагаат Математика.
+Излез: На излез треба да се испечати броj на термин, па студентите кои
+полагаат во тоj термин.
+Пример:
+Влез:
+2
+4
+IlinkaIvanoska
+IgorKulev
+129
+Податочни структури
+MagdalenaKostoska
+HristinaMihajloska
+3
+VladimirTrajkovik
+SlobodanKalajdziski
+AnastasMisev
+1
+IlinkaIvanoska
+Излез: 1
+IlinkaIvanoska
+VladimirTrajkovik
+2
+SlobodanKalajdziski
+AnastasMisev
+3
+IgorKulev
+MagdalenaKostoska
+4
+HristinaMihajloska
+Решение
+Во дадената задача треба да се имплементира распределба на полагање на студенти на прв колоквиум по предметот Алгоритми и структури на податоци по
+термини. За да се одговори на барањата од задачата мора да се искористат 2
+податочни структури редица (redMath и redOstanati) за да се чуваат студентите
+соодветно според тоа што се приjавиле дека полагаат (АПС и Математика, или
+пак само АПС) (може било коjа имплеметациjа на редица да се искористи). На
+влезот коj се обработува дадени се броjот на студенти за распределва по термин,
+броj на студенти кои исто така полагаат и Математика во истиот термин како и
+колоквиумот по АПС, како и нивните имиња кои се ставаат во соодветната редица, па броjот на студенти кои полагаат само колоквиум по АПС, без Математика,
+како и нивните имиња кои со кои се пони втората редица. Потоа, се дава броjот
+на студенти кои вистински полагаат Математика, како и нивните имиња за кои
+мора да се искористи дополнителна податочна структура да се зачуваат како
+листа listRealMath. Распределба на студентите се прави според следните услови:
+Студентите од redMath се проверува дали се вистински приjавени за Математика, и ако не се во listRealMath, тогаш се преместуваат во redOstanati. Потоа,
+студентите се распределуваат во термините. Во секоj термин се додаваат студен130
+Податочни структури
+ти онолку колку е дозволено, ако има достапни студенти во redMath. Ако нема
+пове´ке студенти во redMath, се користи redOstanati за дополнително пополнување на термините. Накраj, за секоj термин се прикажува листата на студенти кои
+се приjавиле за тоj термин.
+Имплементациjата на решението е дадена подолу. Резултатот од примерен
+влез се печати на излез во главниот main метод
+
+
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Read input
+        int capacity = Integer.parseInt(sc.nextLine().trim());
+        int nMath = Integer.parseInt(sc.nextLine().trim());
+        ArrayQueue<String> queue = new ArrayQueue<>(nMath); // Size based on input
+        for (int i = 0; i < nMath; i++) {
+            queue.enqueue(sc.nextLine());
+        }
+
+        int rest = Integer.parseInt(sc.nextLine().trim());
+        ArrayQueue<String> queue2 = new ArrayQueue<>(rest + nMath); // Add capacity for potential transfers
+        for (int i = 0; i < rest; i++) {
+            queue2.enqueue(sc.nextLine());
+        }
+
+        int real = Integer.parseInt(sc.nextLine().trim());
+        List<String> queue3 = new ArrayList<>(); // Use List for easier membership check
+        for (int i = 0; i < real; i++) {
+            queue3.add(sc.nextLine());
+        }
+
+        // Separate real math students from those who only claim
+        ArrayQueue<String> verifiedMath = new ArrayQueue<>(nMath);
+        while (!queue.isEmpty()) {
+            String student = queue.dequeue();
+            if (queue3.contains(student)) {
+                verifiedMath.enqueue(student); // verified student
+            } else {
+                queue2.enqueue(student); // transfer to other queue
+            }
+        }
+
+        // Process exam slots
+        int brojTermin = 1;
+        while (!verifiedMath.isEmpty() || !queue2.isEmpty()) {
+            System.out.println(brojTermin);
+            int counter = 0;
+
+            // Assign math students first
+            while (counter < capacity && !verifiedMath.isEmpty()) {
+                System.out.println(verifiedMath.dequeue());
+                counter++;
+            }
+
+            // Fill remaining slots with other students
+            while (counter < capacity && !queue2.isEmpty()) {
+                System.out.println(queue2.dequeue());
+                counter++;
+            }
+
+            brojTermin++;
+        }
+    }
+}
