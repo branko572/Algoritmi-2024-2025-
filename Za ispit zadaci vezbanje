@@ -136,3 +136,44 @@ b 3
 ---
 
 
+class Person{
+    int queue;
+    String name;
+
+    Person(String name, int queue) {
+        this.name = name;
+        this.queue = queue;
+    }
+}
+
+
+
+
+public class Main {
+    public static void main(String[] args){
+        Scanner sc=new Scanner(System.in);
+        int N=sc.nextInt();
+
+
+        sc.nextLine();
+        ArrayQueue<Person> q = new ArrayQueue<>(N*2);
+        for(int i=0; i<N; i++){
+            String line = sc.nextLine(); // read full line like "Nenad 3"
+            String[] parts = line.split("\\s+"); // split by space
+            String name = parts[0];
+            int queue = Integer.parseInt(parts[1]);
+            q.enqueue(new Person(name, queue));
+        }
+          while (!q.isEmpty()) {
+            Person p = q.dequeue(); // take the first person
+            p.queue--; // process one request
+
+            if (p.queue == 0) {
+                System.out.println(p.name); // done
+            } else {
+                q.enqueue(p); // go to the back of the line
+            }
+        }
+
+    }
+}
