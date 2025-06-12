@@ -183,6 +183,20 @@ public class Main {
     }
 }
 
+---------------------------------------------------------------------
+
+SO REKURZIJA:
+
+public static void inorder(Treenode root) {
+    if (root == null) {
+        return;
+    }
+
+    inorder(root.left);              // 1. Traverse left subtree
+    System.out.println(root.value);  // 2. Visit the root
+    inorder(root.right);             // 3. Traverse right subtree
+}
+
 
 Задача 3. Надополнување• За дома:
 o Да се напише функција preorderNonRecursive за
