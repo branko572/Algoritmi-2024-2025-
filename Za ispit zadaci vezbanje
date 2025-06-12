@@ -1,0 +1,138 @@
+SLL - Влезна задача
+
+Се внесува број на стрингови, се печати низата пред промени, секој стринг што почнува со мала буква се преместува на крајот од листата, и па се печате листата
+
+Input
+4
+ova
+Eden
+Zdravo
+hawaii
+
+Output
+ova -> Eden -> Zdravo -> hawaii
+Eden -> Zdravo -> ova -> hawaii
+
+
+
+public class Main{
+    public static void main(String[] args){
+        Scanner sc =new Scanner(System.in);
+        int N= sc.nextInt();
+
+        SLL<String>list=new SLL<>();
+
+        for(int i=0;i<N;i++){
+            list.insertLast(sc.next());
+        }
+
+        SLLNode<String>current=list.getFirst();
+
+        System.out.println(list);
+
+        int processed = 0;
+
+        while(current != null && processed < N){
+            String temp = current.element;
+            SLLNode<String> next = current.succ;
+
+            if(Character.isLowerCase(temp.charAt(0))){
+                list.insertLast(temp);
+                list.delete(current);
+            }
+
+            current = next;
+            processed++;
+        }
+        System.out.println(list);
+
+
+    }
+}
+
+
+
+Queue - Влезна задача
+
+Наредени луѓе со број на барања, им се извршува едно барање и се враќаат назад во редот. Печати редослед на завршување на луѓето. 
+
+Input
+5
+Nenad 3
+Slave 1
+Martin 2
+Ana 1
+Igor 2
+
+Output
+Slave
+Ana
+Martin
+Igor
+Nenad
+
+-----
+
+DP
+
+Најди го бројот на wow поднизи во стринг
+
+Input
+wwoww
+Output
+4
+
+Explanitaion:
+w-ow-
+w-o-w
+-wow-
+-wo-w
+
+Input
+ooooowwwwwoooo
+Output
+0
+
+Input
+woowow
+Output
+6с
+
+Начин:
+wo-w--
+wo---w
+w-ow--
+w-o--w
+w---ow
+---wow
+
+
+----
+
+Stack
+
+Најди ја фунцкијата што повикува највеќе фунцкии во неа. Секоја фунцкија има Call x - x е името на фунцкијата - и Return.
+
+Input
+12
+Call a
+Call b
+Call c
+Return
+Call d
+Return
+Call e
+Return
+Return
+Call f
+Return
+Return
+
+Output
+b 3
+
+Објаснување: во b се повикани c d и e
+
+---
+
+
